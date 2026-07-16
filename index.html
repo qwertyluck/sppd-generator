@@ -4,174 +4,110 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.50.0/docxtemplater.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pizzip/3.1.7/pizzip.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pizzip/3.1.7/pizzip-utils.js"></script>
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aplikasi Generator SPPD - Kejaksaan Digital</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        /* CSS Paged Media untuk Cetak Presisi A4 */
-        @media print {
-            body { background-color: #ffffff !important; color: #000000 !important; font-family: 'Arial', sans-serif !important; }
-            .no-print { display: none !important; }
-            .print-area { display: block !important; width: 210mm; margin: 0; padding: 0; }
-            .page-break { page-break-before: always; break-before: page; }
-            @page { size: A4; margin: 15mm 12mm; }
-            table { page-break-inside: avoid; }
-            tr { page-break-inside: avoid; page-break-after: auto; }
-        }
-        
-        /* Gaya Khusus Dokumen Dinas Resmi (Preview Box) */
-        .spd-document { font-family: 'Arial', sans-serif; color: #000000; line-height: 1.3; font-size: 10pt; }
-        .spd-document table { width: 100%; border-collapse: collapse; }
-        .spd-table-main td { padding: 4px 2px; vertical-align: top; }
-        .spd-border-table th, .spd-border-table td { border: 1px solid #000000; padding: 5px; font-size: 9.5pt; }
+        @media print { .no-print { display: none !important; } .print-area { display: block !important; } }
+        .spd-document { font-family: 'Arial', sans-serif; color: #000000; font-size: 10pt; line-height: 1.3; }
     </style>
 </head>
-<body class="bg-slate-100 min-h-screen text-slate-800 flex flex-col antialiased">
+<body class="bg-slate-100 flex flex-col min-h-screen">
 
-    <header class="bg-emerald-800 text-white shadow-md p-4 no-print">
+    <header class="bg-emerald-800 text-white p-4 no-print shadow-md">
         <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <div class="bg-white p-2 rounded-full text-emerald-800 font-bold text-xl">⚓</div>
-                <div>
-                    <h1 class="font-bold text-lg tracking-wide">KEJAKSAAN DIGITAL</h1>
-                    <p class="text-xs text-emerald-200">Sistem Ekspedisi & Penerbitan Surat Perjalanan Dinas Terstandardisasi</p>
-                </div>
-            </div>
-            <div class="flex space-x-2">
-                <button onclick="window.print()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-4 py-2 rounded shadow transition text-sm flex items-center space-x-1 cursor-pointer">
-                    <span>🖨️</span> <span>Cetak / PDF</span>
-                </button>
-                <button onclick="downloadWord()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded shadow transition text-sm flex items-center space-x-1 cursor-pointer">
-                    <span>📝</span> <span>Unduh Word (.docx)</span>
-                </button>
-            </div>
+            <h1 class="font-bold text-lg">KEJAKSAAN DIGITAL</h1>
+            <button onclick="downloadWord()" class="bg-blue-600 px-4 py-2 rounded text-sm font-bold hover:bg-blue-700">Unduh Word (.docx)</button>
         </div>
     </header>
 
     <main class="flex-1 container mx-auto p-4 flex flex-col lg:flex-row gap-6 no-print">
-        
-        <section class="w-full lg:w-5/12 bg-white rounded-xl shadow p-6 overflow-y-auto max-h-[85vh]">
-            <h2 class="text-lg font-bold border-b border-slate-200 pb-2 text-emerald-800 flex items-center mb-4">
-                <span class="mr-2">📝</span> Data Input Utama SPPD
-            </h2>
-            
+        <section class="w-full lg:w-5/12 bg-white rounded-xl shadow p-6 max-h-[85vh] overflow-y-auto">
             <form id="sppdForm" class="space-y-4">
-                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-3">
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Metadata Dinas & Nomor Surat</label>
-                    <div>
-                        <label class="block text-xs text-slate-600">Satuan Kerja</label>
-                        <input type="text" id="in_satuan_kerja" value="Kejaksaan Tinggi Maluku" class="w-full border rounded px-3 py-1.5 text-sm focus:ring-2 focus:ring-emerald-500 bg-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-slate-600">Nomor SPPD</label>
-                        <input type="text" id="in_nomor" value="SPPD-024/PPK/01/2026" class="w-full border rounded px-3 py-1.5 text-sm font-mono focus:ring-2 focus:ring-emerald-500 bg-white">
-                    </div>
-                </div>
-
-                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-3">
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Pelaksana Perjalanan Dinas Utama</label>
-                    <div>
-                        <label class="block text-xs text-slate-600">Nama Pegawai Utama</label>
-                        <input type="text" id="in_nama_pegawai" value="LUTHER KURNIAWAN, S.H., M.H." class="w-full border rounded px-3 py-1.5 text-sm bg-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-slate-600">NIP Utama</label>
-                        <input type="text" id="in_nip_utama" value="197405082000031002" class="w-full border rounded px-3 py-1.5 text-sm font-mono bg-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-slate-600">Pangkat / Golongan</label>
-                        <input type="text" id="in_pangkat_utama" value="Jaksa Madya (IV/a)" class="w-full border rounded px-3 py-1.5 text-sm bg-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-slate-600">Jabatan / Instansi</label>
-                        <input type="text" id="in_jabatan_utama" value="Asisten Bidang Pengawasan Kejaksaan Tinggi Maluku" class="w-full border rounded px-3 py-1.5 text-sm bg-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-slate-600">Tingkat Biaya</label>
-                        <input type="text" id="in_biaya_utama" value="C" class="w-full border rounded px-3 py-1.5 text-sm bg-white">
-                    </div>
-                </div>
-
-                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-2">
-                    <div class="flex justify-between items-center">
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Daftar Pengikut (Poin 8)</label>
-                        <button type="button" onclick="addPengikutRow()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-2 py-1 rounded shadow transition cursor-pointer">+ Tambah</button>
-                    </div>
-                    <div id="pengikutInputsContainer" class="space-y-2"></div>
-                </div>
+                <div><label class="text-xs font-bold">Satuan Kerja</label><input type="text" id="in_satuan_kerja" value="Kejaksaan Tinggi Maluku" class="w-full border rounded px-3 py-1.5 text-sm"></div>
+                <div><label class="text-xs font-bold">Nomor SPPD</label><input type="text" id="in_nomor" value="SPPD-024/PPK/01/2026" class="w-full border rounded px-3 py-1.5 text-sm"></div>
+                <div><label class="text-xs font-bold">Nama Pegawai Utama</label><input type="text" id="in_nama_pegawai" value="LUTHER KURNIAWAN, S.H., M.H." class="w-full border rounded px-3 py-1.5 text-sm"></div>
+                <button type="button" onclick="addPengikutRow()" class="bg-emerald-600 text-white px-2 py-1 rounded text-xs">+ Tambah Pengikut</button>
+                <div id="pengikutInputsContainer" class="space-y-2 mt-2"></div>
             </form>
         </section>
 
-        <section class="w-full lg:w-7/12 flex flex-col items-center overflow-y-auto max-h-[85vh] bg-slate-300 p-4 rounded-xl border border-slate-400">
-            <div class="w-full max-w-[210mm] bg-white shadow-2xl p-[15mm] spd-document rounded-md mb-6 border border-slate-200" id="previewPage1"></div>
+        <section class="w-full lg:w-7/12 bg-slate-300 p-4 rounded-xl max-h-[85vh] overflow-y-auto">
+            <div id="previewPage1" class="bg-white p-[15mm] spd-document min-h-[297mm]"></div>
         </section>
     </main>
 
     <script>
-        function downloadWord() {
-            alert("Memulai proses unduhan...");
-            const nomorFile = document.getElementById('in_nomor').value.replace(/[\/\*?:|"<>]/g, '-');
+        let daftarPengikut = [{ nama: "AMRI KURNIAWAN, S.H., M.H.", jabatan: "RIKSA PEGASUM", ket: "" }];
+
+        function renderPengikutInputs() {
+            const container = document.getElementById('pengikutInputsContainer');
+            container.innerHTML = '';
+            daftarPengikut.forEach((p, idx) => {
+                const row = document.createElement('div');
+                row.className = 'flex gap-1 items-center bg-white p-1 rounded border';
+                row.innerHTML = `<input value="${p.nama}" oninput="daftarPengikut[${idx}].nama=this.value; updateDocumentView()" class="w-1/2 text-xs border p-1"><input value="${p.jabatan}" oninput="daftarPengikut[${idx}].jabatan=this.value; updateDocumentView()" class="w-1/2 text-xs border p-1">`;
+                container.appendChild(row);
+            });
+        }
+
+        function updateDocumentView() {
+            const preview = document.getElementById('previewPage1');
+            if(!preview) return;
             
-            // Panggilan Template.docx dengan huruf T besar agar sesuai GitHub
-            PizZipUtils.getBinaryContent("Template.docx", function (error, content) {
+            const data = {
+                satuan: document.getElementById('in_satuan_kerja').value,
+                nomor: document.getElementById('in_nomor').value,
+                nama: document.getElementById('in_nama_pegawai').value
+            };
+            
+            preview.innerHTML = `
+                <div class="text-center font-bold text-lg">SURAT PERJALANAN DINAS</div>
+                <div class="mt-4">
+                    <p>Satker: ${data.satuan}</p>
+                    <p>Nomor: ${data.nomor}</p>
+                    <p>Nama: ${data.nama}</p>
+                </div>
+            `;
+            localStorage.setItem('sppd_data_cache', JSON.stringify({ ...data, pengikut: daftarPengikut }));
+        }
+
+        function downloadWord() {
+            // Panggilan template.docx persis sesuai nama file di repo
+            PizZipUtils.getBinaryContent("template.docx", function (error, content) {
                 if (error) {
-                    alert("Gagal memuat Template.docx. Pastikan file ada di repositori dan nama filenya benar.");
+                    alert("Error: File 'template.docx' tidak ditemukan. Pastikan nama file di GitHub persis 'template.docx'");
                     return;
                 }
-
+                const zip = new PizZip(content);
+                const doc = new window.docxtemplater(zip, { paragraphLoop: true, linebreaks: true });
+                
                 try {
-                    const zip = new PizZip(content);
-                    const doc = new window.docxtemplater(zip, { paragraphLoop: true, linebreaks: true });
-
-                    // Data lengkap untuk template
-                    const contextData = {
+                    doc.render({
                         "satuan_kerja": document.getElementById('in_satuan_kerja').value,
                         "nomor": document.getElementById('in_nomor').value,
-                        "ppk_nama": document.getElementById('in_ppk_nama').value,
                         "nama_pegawai": document.getElementById('in_nama_pegawai').value,
-                        "nip_utama": document.getElementById('in_nip_utama').value,
-                        "pangkat_utama": document.getElementById('in_pangkat_utama').value,
-                        "jabatan_utama": document.getElementById('in_jabatan_utama').value,
-                        "biaya_utama": document.getElementById('in_biaya_utama').value,
-                        "maksud": document.getElementById('in_maksud').value,
-                        "angkutan": document.getElementById('in_angkutan').value,
-                        "asal": document.getElementById('in_asal').value,
-                        "tujuan": document.getElementById('in_tujuan').value,
-                        "lama": document.getElementById('in_lama').value,
-                        "tgl_berangkat": document.getElementById('in_tgl_berangkat').value,
-                        "tgl_kembali": document.getElementById('in_tgl_kembali').value,
-                        "dipa": document.getElementById('in_dipa').value,
-                        "akun": document.getElementById('in_akun').value,
-                        "lokasi_satker_asal": document.getElementById('in_lokasi_asal').value,
-                        "tgl_ttd": document.getElementById('in_tgl_ttd').value,
-                        "ppk_nip": document.getElementById('in_ppk_nip').value,
-                        "pengikut": daftarPengikut.map((p, index) => ({
-                            no: index + 1,
-                            nama: p.nama || '-',
-                            jabatan: p.jabatan || '-',
-                            ket: p.ket || ''
-                        }))
-                    };
-
-                    doc.render(contextData);
-                    const out = doc.getZip().generate({ type: "blob" });
-                    const url = URL.createObjectURL(out);
+                        "pengikut": daftarPengikut
+                    });
+                    const blob = doc.getZip().generate({ type: "blob" });
                     const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `SPPD_${nomorFile}.docx`;
-                    document.body.appendChild(a);
+                    a.href = URL.createObjectURL(blob);
+                    a.download = "SPPD_Generated.docx";
                     a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                    alert("Berhasil!");
-                } catch (err) {
-                    alert("Terjadi eror saat memproses data ke Word. Cek kembali kurung kurawal di file Word Anda.");
-                    console.error(err);
+                } catch (e) {
+                    alert("Gagal render Word: " + e.message);
                 }
             });
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPengikutInputs();
+            updateDocumentView();
+            document.getElementById('sppdForm').addEventListener('input', updateDocumentView);
+        });
+
+        function addPengikutRow() { daftarPengikut.push({ nama: '', jabatan: '', ket: '' }); renderPengikutInputs(); updateDocumentView(); }
     </script>
 </body>
 </html>
