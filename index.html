@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <!-- CDN Dependensi DocxTemplater & PizZip -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.50.0/docxtemplater.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pizzip/3.1.7/pizzip.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pizzip/3.1.7/pizzip-utils.js"></script>
@@ -9,7 +8,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aplikasi Generator SPPD - Kejaksaan Digital</title>
-    <!-- Tailwind CSS untuk Layouting UI Input -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         /* CSS Paged Media untuk Cetak Presisi A4 */
@@ -45,7 +43,7 @@
             }
         }
         
-        /* Gaya Khusus Dokumen Dinas Resmi (Preview Box) */
+        /* Gaya Preview Box */
         .spd-document {
             font-family: 'Arial', sans-serif;
             color: #000000;
@@ -69,7 +67,6 @@
 </head>
 <body class="bg-slate-100 min-h-screen text-slate-800 flex flex-col antialiased">
 
-    <!-- HEADER APLIKASI (no-print) -->
     <header class="bg-emerald-800 text-white shadow-md p-4 no-print">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-3">
@@ -90,17 +87,14 @@
         </div>
     </header>
 
-    <!-- KONTEN UTAMA SPLIT SCREEN (no-print) -->
     <main class="flex-1 container mx-auto p-4 flex flex-col lg:flex-row gap-6 no-print">
         
-        <!-- PANEL KIRI: FORMULIR INPUT -->
         <section class="w-full lg:w-5/12 bg-white rounded-xl shadow p-6 overflow-y-auto max-h-[85vh]">
             <h2 class="text-lg font-bold border-b border-slate-200 pb-2 text-emerald-800 flex items-center mb-4">
                 <span class="mr-2">📝</span> Data Input Utama SPPD
             </h2>
             
             <form id="sppdForm" class="space-y-4">
-                <!-- 1. Instansi & Nomor -->
                 <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-3">
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Metadata Dinas & Nomor Surat</label>
                     <div>
@@ -113,10 +107,8 @@
                     </div>
                 </div>
 
-                <!-- 2. Data Pegawai Utama -->
                 <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-3">
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Pelaksana Perjalanan Dinas Utama</label>
-                    <!-- UPDATE: Tambahan kolom input nama pegawai utama sesuai template terbaru -->
                     <div>
                         <label class="block text-xs text-slate-600">Nama Pegawai Utama</label>
                         <input type="text" id="in_nama_pegawai" value="LUTHER KURNIAWAN, S.H., M.H." class="w-full border rounded px-3 py-1.5 text-sm bg-white">
@@ -140,7 +132,6 @@
                     </div>
                 </div>
 
-                <!-- 3. Rincian Dinas -->
                 <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-3">
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Maksud & Rute Dinas</label>
                     <div>
@@ -177,18 +168,15 @@
                     </div>
                 </div>
 
-                <!-- 4. Pengikut (Poin 8) -->
                 <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-2">
                     <div class="flex justify-between items-center">
                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Daftar Pengikut (Poin 8)</label>
                         <button type="button" onclick="addPengikutRow()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-2 py-1 rounded shadow transition cursor-pointer">+ Tambah</button>
                     </div>
                     <div id="pengikutInputsContainer" class="space-y-2">
-                        <!-- Diinjeksi via JS -->
-                    </div>
+                        </div>
                 </div>
 
-                <!-- 5. Pembebanan Anggaran & PPK -->
                 <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-3">
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Anggaran & Otorisasi</label>
                     <div>
@@ -223,22 +211,18 @@
             </form>
         </section>
 
-        <!-- PANEL KANAN: LIVE PREVIEW DOKUMEN -->
         <section class="w-full lg:w-7/12 flex flex-col items-center overflow-y-auto max-h-[85vh] bg-slate-300 p-4 rounded-xl border border-slate-400">
             <div class="w-full max-w-[210mm] bg-white shadow-2xl p-[15mm] spd-document rounded-md mb-6 border border-slate-200" id="previewPage1">
-                <!-- PAGE 1 INJECTED HERE -->
-            </div>
+                </div>
             <div class="w-full max-w-[210mm] bg-white shadow-2xl p-[15mm] spd-document rounded-md border border-slate-200" id="previewPage2">
-                <!-- PAGE 2 INJECTED HERE -->
-            </div>
+                </div>
         </section>
     </main>
 
-    <!-- AREA CETAK KHUSUS -->
     <div id="printContainer" class="hidden print-area mx-auto"></div>
 
     <footer class="bg-slate-800 text-slate-400 text-center py-2 text-xs border-t border-slate-700 no-print mt-auto">
-        &copy; 2026 Kejaksaan Digital - Korps Adhyaksa Maluku Terstandardisasi PMK 113/PMK.05/2012[cite: 4]
+        &copy; 2026 Kejaksaan Digital - Korps Adhyaksa Maluku Terstandardisasi PMK 113/PMK.05/2012
     </footer>
 
     <script>
@@ -285,7 +269,7 @@
                 if(document.getElementById('in_asal')) document.getElementById('in_asal').value = data.asal || "Ambon";
                 if(document.getElementById('in_tujuan')) document.getElementById('in_tujuan').value = data.tujuan || "Kejaksaan Negeri Buru - Namlea";
                 if(document.getElementById('in_lama')) document.getElementById('in_lama').value = data.lama || "3 (tiga) Hari";
-                if(document.getElementById('in_tgl_berangkat')) document.getElementById('in_tgl_berangkat').value = data.tgl_berangkat || "26  Januari 2026";
+                if(document.getElementById('in_tgl_berangkat')) document.getElementById('in_tgl_berangkat').value = data.tgl_berangkat || "26 Januari 2026";
                 if(document.getElementById('in_tgl_kembali')) document.getElementById('in_tgl_kembali').value = data.tgl_kembali || "28 Januari 2026";
                 if(document.getElementById('in_dipa')) document.getElementById('in_dipa').value = data.dipa || "DIPA Kejaksaan Tinggi Maluku TA 2026";
                 if(document.getElementById('in_akun')) document.getElementById('in_akun').value = data.akun || "524111";
@@ -471,13 +455,13 @@
             saveToLocalStorage();
         }
 
-        // FUNGSI EKSPOR DIKUNCI 100% SESUAI VARIABEL TEMPLATE .DOCX TERBARU ANDA
+        // FUNGSI EKSPOR DIKUNCI 100% - MENYESUAIKAN TYPO ASLI PADA TEMPLATE PDF/WORD
         function downloadWord() {
             const nomorFile = document.getElementById('in_nomor').value.replace(/[\/\*?:|"<>]/g, '-');
             
             PizZipUtils.getBinaryContent("template.docx", function (error, content) {
                 if (error) {
-                    alert("Gagal memuat template.docx. Pastikan file sudah berada di repositori Anda.");
+                    alert("Gagal memuat template.docx. Pastikan berkas tersebut telah diunggah di dalam repositori Anda.");
                     return;
                 }
 
@@ -487,53 +471,81 @@
                     linebreaks: true,
                 });
 
-                // INTEGRASI KAKU DENGAN VARIABEL TEMPLATE BARU (MEMASUKKAN KOREKSI TYPO TEMPLATE SECARA AMAN)
+                // PEMETAAN ROBUST: Menyamakan persis semua keunikan string di template.pdf Anda
                 const contextData = {
-                    "satuan_kerja": document.getElementById('in_satuan_kerja').value, // Menjawab {satuan_kerja}
-                    "nomor": document.getElementById('in_nomor').value,              // Menjawab {nomor} (Huruf kecil)
-                    "ppk_nama": document.getElementById('in_ppk_nama').value,          // Menjawab {ppk_nama}
+                    // Kop Atas
+                    "satuan_kerja": document.getElementById('in_satuan_kerja').value, 
+                    "nomor": document.getElementById('in_nomor').value,              
                     
-                    // Poin 2: Menjawab {nama_pegawai} & {nip_utama}
+                    // Poin 1 & 2
+                    "ppk_nama": document.getElementById('in_ppk_nama').value,          
                     "nama_pegawai": document.getElementById('in_nama_pegawai').value,
+                    
+                    // Toleransi error format pada POIN 2: "nip_utama)"
                     "nip_utama": document.getElementById('in_nip_utama').value,        
-                    "nip_utama)": document.getElementById('in_nip_utama').value,       // Toleransi typo PDF "nip_utama)"
+                    "nip_utama)": document.getElementById('in_nip_utama').value,       
                     
-                    "pangkat_utama": document.getElementById('in_pangkat_utama').value,  // Menjawab {pangkat_utama}
+                    // Poin 3
+                    "pangkat_utama": document.getElementById('in_pangkat_utama').value,  
+                    
+                    // Toleransi error format pada POIN 3b: "jabatan_utama}"
                     "jabatan_utama": document.getElementById('in_jabatan_utama').value,  
-                    "jabatan_utama}": document.getElementById('in_jabatan_utama').value, // Toleransi typo PDF "jabatan_utama}"
+                    "jabatan_utama}": document.getElementById('in_jabatan_utama').value, 
                     
+                    // Toleransi error format pada POIN 3c: "(biaya_utama}"
                     "biaya_utama": document.getElementById('in_biaya_utama').value,    
-                    "biaya_utama}": document.getElementById('in_biaya_utama').value,   // Toleransi typo PDF "biaya_utama}"
+                    "biaya_utama}": document.getElementById('in_biaya_utama').value,   
+                    "(biaya_utama}": document.getElementById('in_biaya_utama').value,   
                     
-                    "maksud": document.getElementById('in_maksud').value,              // Menjawab {maksud}
-                    "angkutan": document.getElementById('in_angkutan').value,          // Menjawab {angkutan}
+                    // Poin 4, 5, 6
+                    "maksud": document.getElementById('in_maksud').value,              
+                    "angkutan": document.getElementById('in_angkutan').value,          
                     
+                    // Toleransi error format pada POIN 6a: "{asal)"
                     "asal": document.getElementById('in_asal').value,                  
-                    "asal)": document.getElementById('in_asal').value,                  // Toleransi typo PDF "{asal)"
-                    "asal ": document.getElementById('in_asal').value,                  // Toleransi spasi "{asal "
+                    "asal)": document.getElementById('in_asal').value,                  
+                    "{asal)": document.getElementById('in_asal').value,                  
+                    "asal ": document.getElementById('in_asal').value,                  
                     
-                    "tujuan": document.getElementById('in_tujuan').value,              // Menjawab {tujuan}
-                    "lama": document.getElementById('in_lama').value,                  // Menjawab {lama}
-                    "tgl_berangkat": document.getElementById('in_tgl_berangkat').value,// Menjawab {tgl_berangkat}
+                    "tujuan": document.getElementById('in_tujuan').value,              
                     
+                    // Poin 7
+                    // Toleransi error format pada POIN 7a: "(lama)"
+                    "lama": document.getElementById('in_lama').value,                  
+                    "(lama)": document.getElementById('in_lama').value,                  
+                    
+                    "tgl_berangkat": document.getElementById('in_tgl_berangkat').value,
+                    
+                    // Toleransi error format pada POIN 7c: "tgl_kembali}"
                     "tgl_kembali": document.getElementById('in_tgl_kembali').value,    
-                    "tgl_kembali}": document.getElementById('in_tgl_kembali').value,   // Toleransi typo PDF "tgl_kembali}"
+                    "tgl_kembali}": document.getElementById('in_tgl_kembali').value,   
                     
+                    // Poin 9
+                    // Toleransi error format pada POIN 9a: "{dipa)"
                     "dipa": document.getElementById('in_dipa').value,                  
-                    "dipa)": document.getElementById('in_dipa').value,                  // Toleransi typo PDF "{dipa)"
+                    "dipa)": document.getElementById('in_dipa').value,                  
+                    "{dipa)": document.getElementById('in_dipa').value,                  
                     
+                    // Toleransi error format pada POIN 9b: "{akun " (kurung kurawal tidak ditutup)
                     "akun": document.getElementById('in_akun').value,                  
-                    "akun ": document.getElementById('in_akun').value,                  // Toleransi spasi "{akun "
+                    "akun ": document.getElementById('in_akun').value,                  
+                    "{akun ": document.getElementById('in_akun').value,                  
                     
+                    // Tanda Tangan Depan
+                    // Toleransi error format pada bagian lokasi: "lokasi_satker_asal}"
                     "lokasi_satker_asal": document.getElementById('in_lokasi_asal').value, 
-                    "lokasi_satker_asal}": document.getElementById('in_lokasi_asal').value, // Toleransi typo "lokasi_satker_asal}"
+                    "lokasi_satker_asal}": document.getElementById('in_lokasi_asal').value, 
                     
-                    "tgl_ttd": document.getElementById('in_tgl_ttd').value,            // Menjawab {tgl_ttd}
-                    "ppk_nip": document.getElementById('in_ppk_nip').value,            // Menjawab {ppk_nip}
-                    "ppk nama": document.getElementById('in_ppk_nama').value,          // Menjawab {ppk nama} (tanpa underscore di poin VIII)
-                    "ppk nama ": document.getElementById('in_ppk_nama').value,         // Toleransi spasi "{ppk nama "
+                    "tgl_ttd": document.getElementById('in_tgl_ttd').value,            
+                    "ppk_nip": document.getElementById('in_ppk_nip').value,            
                     
-                    // Pembacaan data tabel perulangan dinamis pengikut
+                    // Poin VIII Belakang
+                    // Toleransi error format pada bagian akhir: "{ppk nama "
+                    "ppk nama": document.getElementById('in_ppk_nama').value,          
+                    "ppk nama ": document.getElementById('in_ppk_nama').value,         
+                    "{ppk nama ": document.getElementById('in_ppk_nama').value,         
+                    
+                    // Perulangan dinamis tabel pengikut Poin 8
                     "pengikut": daftarPengikut.map((p, index) => ({
                         no: index + 1,
                         nama: p.nama || '-',
@@ -561,7 +573,7 @@
                     
                 } catch (err) {
                     console.error(err);
-                    alert("Terjadi kesalahan teknis saat melakukan render data ke berkas Word.");
+                    alert("Terjadi kesalahan teknis saat menerjemahkan data ke dalam berkas Word. Periksa kembali kecocokan tag kurung kurawal di file template.docx Anda.");
                 }
             });
         }
