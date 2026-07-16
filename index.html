@@ -7,79 +7,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aplikasi Generator SPPD - Kejaksaan Digital</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @media print { .no-print { display: none !important; } .print-area { display: block !important; } }
         .spd-document { font-family: 'Arial', sans-serif; color: #000000; font-size: 10pt; line-height: 1.3; }
+        .spd-border-table { border-collapse: collapse; width: 100%; }
+        .spd-border-table th, .spd-border-table td { border: 1px solid #000; padding: 5px; }
     </style>
 </head>
-<body class="bg-slate-100 flex flex-col min-h-screen">
-
-    <header class="bg-emerald-800 text-white p-4 no-print shadow-md">
+<body class="bg-slate-100 min-h-screen">
+    <header class="bg-emerald-800 text-white p-4 no-print shadow-lg">
         <div class="container mx-auto flex justify-between items-center">
             <h1 class="font-bold text-lg">KEJAKSAAN DIGITAL</h1>
-            <button onclick="downloadWord()" class="bg-blue-600 px-4 py-2 rounded text-sm font-bold hover:bg-blue-700">Unduh Word (.docx)</button>
+            <div class="space-x-2">
+                <button onclick="window.print()" class="bg-amber-500 px-4 py-2 rounded text-sm font-bold text-slate-900">Cetak</button>
+                <button onclick="downloadWord()" class="bg-blue-600 px-4 py-2 rounded text-sm font-bold">Unduh Word (.docx)</button>
+            </div>
         </div>
     </header>
 
-    <main class="flex-1 container mx-auto p-4 flex flex-col lg:flex-row gap-6 no-print">
+    <main class="container mx-auto p-4 flex flex-col lg:flex-row gap-6 no-print">
         <section class="w-full lg:w-5/12 bg-white rounded-xl shadow p-6 max-h-[85vh] overflow-y-auto">
             <form id="sppdForm" class="space-y-4">
-                <div><label class="text-xs font-bold">Satuan Kerja</label><input type="text" id="in_satuan_kerja" value="Kejaksaan Tinggi Maluku" class="w-full border rounded px-3 py-1.5 text-sm"></div>
-                <div><label class="text-xs font-bold">Nomor SPPD</label><input type="text" id="in_nomor" value="SPPD-024/PPK/01/2026" class="w-full border rounded px-3 py-1.5 text-sm"></div>
-                <div><label class="text-xs font-bold">Nama Pegawai Utama</label><input type="text" id="in_nama_pegawai" value="LUTHER KURNIAWAN, S.H., M.H." class="w-full border rounded px-3 py-1.5 text-sm"></div>
-                <button type="button" onclick="addPengikutRow()" class="bg-emerald-600 text-white px-2 py-1 rounded text-xs">+ Tambah Pengikut</button>
-                <div id="pengikutInputsContainer" class="space-y-2 mt-2"></div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold uppercase">Metadata</label>
+                    <input type="text" id="in_satuan_kerja" value="Kejaksaan Tinggi Maluku" class="w-full border p-2 text-sm">
+                    <input type="text" id="in_nomor" value="SPPD-024/PPK/01/2026" class="w-full border p-2 text-sm">
+                </div>
+                <div id="pengikutInputsContainer" class="space-y-2"></div>
+                <button type="button" onclick="addPengikutRow()" class="bg-emerald-600 text-white px-3 py-1 rounded text-xs">+ Tambah Pengikut</button>
             </form>
         </section>
 
         <section class="w-full lg:w-7/12 bg-slate-300 p-4 rounded-xl max-h-[85vh] overflow-y-auto">
-            <div id="previewPage1" class="bg-white p-[15mm] spd-document min-h-[297mm]"></div>
+            <div id="previewPage1" class="bg-white p-[15mm] spd-document min-h-[297mm] shadow-xl"></div>
         </section>
     </main>
 
     <script>
-        let daftarPengikut = [{ nama: "AMRI KURNIAWAN, S.H., M.H.", jabatan: "RIKSA PEGASUM", ket: "" }];
+        let daftarPengikut = [{ nama: "AMRI KURNIAWAN", jabatan: "RIKSA", ket: "" }];
 
-        function renderPengikutInputs() {
+        function addPengikutRow() { daftarPengikut.push({ nama: '', jabatan: '', ket: '' }); renderInputs(); }
+        
+        function renderInputs() {
             const container = document.getElementById('pengikutInputsContainer');
             container.innerHTML = '';
             daftarPengikut.forEach((p, idx) => {
-                const row = document.createElement('div');
-                row.className = 'flex gap-1 items-center bg-white p-1 rounded border';
-                row.innerHTML = `<input value="${p.nama}" oninput="daftarPengikut[${idx}].nama=this.value; updateDocumentView()" class="w-1/2 text-xs border p-1"><input value="${p.jabatan}" oninput="daftarPengikut[${idx}].jabatan=this.value; updateDocumentView()" class="w-1/2 text-xs border p-1">`;
-                container.appendChild(row);
+                container.innerHTML += `<div class="flex gap-1"><input value="${p.nama}" oninput="daftarPengikut[${idx}].nama=this.value" class="w-1/2 border p-1 text-xs"></div>`;
             });
         }
 
-        function updateDocumentView() {
-            const preview = document.getElementById('previewPage1');
-            if(!preview) return;
-            
-            const data = {
-                satuan: document.getElementById('in_satuan_kerja').value,
-                nomor: document.getElementById('in_nomor').value,
-                nama: document.getElementById('in_nama_pegawai').value
-            };
-            
-            preview.innerHTML = `
-                <div class="text-center font-bold text-lg">SURAT PERJALANAN DINAS</div>
-                <div class="mt-4">
-                    <p>Satker: ${data.satuan}</p>
-                    <p>Nomor: ${data.nomor}</p>
-                    <p>Nama: ${data.nama}</p>
-                </div>
-            `;
-            localStorage.setItem('sppd_data_cache', JSON.stringify({ ...data, pengikut: daftarPengikut }));
-        }
-
         function downloadWord() {
-            // Panggilan template.docx persis sesuai nama file di repo
+            // Memanggil file "template.docx" yang ada di repositori
             PizZipUtils.getBinaryContent("template.docx", function (error, content) {
-                if (error) {
-                    alert("Error: File 'template.docx' tidak ditemukan. Pastikan nama file di GitHub persis 'template.docx'");
-                    return;
-                }
+                if (error) { alert("File template.docx tidak ditemukan di repositori!"); return; }
                 const zip = new PizZip(content);
                 const doc = new window.docxtemplater(zip, { paragraphLoop: true, linebreaks: true });
                 
@@ -87,27 +68,18 @@
                     doc.render({
                         "satuan_kerja": document.getElementById('in_satuan_kerja').value,
                         "nomor": document.getElementById('in_nomor').value,
-                        "nama_pegawai": document.getElementById('in_nama_pegawai').value,
                         "pengikut": daftarPengikut
                     });
                     const blob = doc.getZip().generate({ type: "blob" });
                     const a = document.createElement('a');
                     a.href = URL.createObjectURL(blob);
-                    a.download = "SPPD_Generated.docx";
+                    a.download = "SPPD_Hasil.docx";
                     a.click();
                 } catch (e) {
-                    alert("Gagal render Word: " + e.message);
+                    alert("Error Template: " + e.message);
                 }
             });
         }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            renderPengikutInputs();
-            updateDocumentView();
-            document.getElementById('sppdForm').addEventListener('input', updateDocumentView);
-        });
-
-        function addPengikutRow() { daftarPengikut.push({ nama: '', jabatan: '', ket: '' }); renderPengikutInputs(); updateDocumentView(); }
     </script>
 </body>
 </html>
