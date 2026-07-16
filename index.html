@@ -1,87 +1,47 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.50.0/docxtemplater.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pizzip/3.1.7/pizzip.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pizzip/3.1.7/pizzip-utils.js"></script>
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aplikasi Generator SPPD - Kejaksaan Digital</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.tailwindcss.com;">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.50.0/docxtemplater.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pizzip/3.1.7/pizzip.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pizzip/3.1.7/pizzip-utils.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
     <style>
-        /* CSS Paged Media untuk Cetak Presisi A4 */
-        @media print {
-            body {
-                background-color: #ffffff !important;
-                color: #000000 !important;
-                font-family: 'Arial', sans-serif !important;
-            }
-            .no-print {
-                display: none !important;
-            }
-            .print-area {
-                display: block !important;
-                width: 210mm;
-                margin: 0;
-                padding: 0;
-            }
-            .page-break {
-                page-break-before: always;
-                break-before: page;
-            }
-            @page {
-                size: A4;
-                margin: 15mm 12mm;
-            }
-            table {
-                page-break-inside: avoid;
-            }
-            tr {
-                page-break-inside: avoid;
-                page-break-after: auto;
-            }
+        /* Gaya khusus untuk memastikan hasil cetak (Print) rapi */
+        @media print { 
+            .no-print { display: none !important; } 
+            body { background: white; }
         }
-        
-        /* Gaya Preview Box */
-        .spd-document {
-            font-family: 'Arial', sans-serif;
-            color: #000000;
-            line-height: 1.3;
-            font-size: 10pt;
-        }
-        .spd-document table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .spd-table-main td {
-            padding: 4px 2px;
-            vertical-align: top;
-        }
-        .spd-border-table th, .spd-border-table td {
-            border: 1px solid #000000;
-            padding: 5px;
-            font-size: 9.5pt;
+        .spd-document { 
+            font-family: 'Arial', sans-serif; 
+            color: #000; 
+            line-height: 1.4; 
         }
     </style>
 </head>
 <body class="bg-slate-100 min-h-screen text-slate-800 flex flex-col antialiased">
 
-    <header class="bg-emerald-800 text-white shadow-md p-4 no-print">
-        <div class="container mx-auto flex justify-between items-center">
+    <header class="bg-emerald-800 text-white shadow-md p-4 no-print sticky top-0 z-50">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center space-x-3">
                 <div class="bg-white p-2 rounded-full text-emerald-800 font-bold text-xl">⚓</div>
                 <div>
                     <h1 class="font-bold text-lg tracking-wide">KEJAKSAAN DIGITAL</h1>
-                    <p class="text-xs text-emerald-200">Sistem Ekspedisi & Penerbitan Surat Perjalanan Dinas Terstandardisasi</p>
+                    <p class="text-xs text-emerald-200">Sistem Penerbitan Surat Perjalanan Dinas Terstandardisasi</p>
                 </div>
             </div>
             <div class="flex space-x-2">
-                <button onclick="window.print()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-4 py-2 rounded shadow transition text-sm flex items-center space-x-1 cursor-pointer">
-                    <span>🖨️</span> <span>Cetak / PDF</span>
+                <button onclick="window.print()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-4 py-2 rounded shadow transition text-sm flex items-center gap-2">
+                    Cetak / PDF
                 </button>
-                <button onclick="downloadWord()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded shadow transition text-sm flex items-center space-x-1 cursor-pointer">
-                    <span>📝</span> <span>Unduh Word (.docx)</span>
+                <button onclick="downloadWord()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded shadow transition text-sm flex items-center gap-2">
+                    Unduh Word (.docx)
                 </button>
             </div>
         </div>
@@ -89,529 +49,442 @@
 
     <main class="flex-1 container mx-auto p-4 flex flex-col lg:flex-row gap-6 no-print">
         
-        <section class="w-full lg:w-5/12 bg-white rounded-xl shadow p-6 overflow-y-auto max-h-[85vh]">
-            <h2 class="text-lg font-bold border-b border-slate-200 pb-2 text-emerald-800 flex items-center mb-4">
-                <span class="mr-2">📝</span> Data Input Utama SPPD
+        <section class="w-full lg:w-5/12 bg-white rounded-xl shadow-lg p-6 overflow-y-auto max-h-[85vh]">
+            <h2 class="text-lg font-bold border-b-2 border-emerald-600 pb-2 text-emerald-800 mb-4">
+                Formulir SPPD
             </h2>
             
-            <form id="sppdForm" class="space-y-4">
-                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-3">
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Metadata Dinas & Nomor Surat</label>
-                    <div>
-                        <label class="block text-xs text-slate-600">Satuan Kerja (Kementerian / Lembaga)</label>
-                        <input type="text" id="in_satuan_kerja" value="Kejaksaan Tinggi Maluku" class="w-full border rounded px-3 py-1.5 text-sm focus:ring-2 focus:ring-emerald-500 bg-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-slate-600">Nomor SPPD</label>
-                        <input type="text" id="in_nomor" value="SPPD-024/PPK/01/2026" class="w-full border rounded px-3 py-1.5 text-sm font-mono focus:ring-2 focus:ring-emerald-500 bg-white">
-                    </div>
-                </div>
-
-                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-3">
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Pelaksana Perjalanan Dinas Utama</label>
-                    <div>
-                        <label class="block text-xs text-slate-600">Nama Pegawai Utama</label>
-                        <input type="text" id="in_nama_pegawai" value="LUTHER KURNIAWAN, S.H., M.H." class="w-full border rounded px-3 py-1.5 text-sm bg-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-slate-600">NIP Utama</label>
-                        <input type="text" id="in_nip_utama" value="197405082000031002" class="w-full border rounded px-3 py-1.5 text-sm font-mono bg-white">
-                        <span id="nip_warning" class="text-xs text-red-500 font-semibold block mt-1"></span>
-                    </div>
-                    <div>
-                        <label class="block text-xs text-slate-600">Pangkat / Golongan</label>
-                        <input type="text" id="in_pangkat_utama" value="Jaksa Madya (IV/a)" class="w-full border rounded px-3 py-1.5 text-sm bg-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-slate-600">Jabatan / Instansi</label>
-                        <input type="text" id="in_jabatan_utama" value="Asisten Bidang Pengawasan Kejaksaan Tinggi Maluku" class="w-full border rounded px-3 py-1.5 text-sm bg-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-slate-600">Tingkat Biaya</label>
-                        <input type="text" id="in_biaya_utama" value="C" class="w-full border rounded px-3 py-1.5 text-sm bg-white">
-                    </div>
-                </div>
-
-                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-3">
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Maksud & Rute Dinas</label>
-                    <div>
-                        <label class="block text-xs text-slate-600">Maksud Perjalanan Dinas</label>
-                        <textarea id="in_maksud" rows="2" class="w-full border rounded px-3 py-1.5 text-sm bg-white">Melaksanakan Kegiatan Inspeksi Pemantauan Semester I Tahun Anggaran 2026 di Daerah Hukum Kejaksaan Negeri Buru.</textarea>
-                    </div>
-                    <div>
-                        <label class="block text-xs text-slate-600">Alat Angkutan</label>
-                        <input type="text" id="in_angkutan" value="Pesawat - Mobil" class="w-full border rounded px-3 py-1.5 text-sm bg-white">
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
+            <form id="sppdForm" class="space-y-6">
+                
+                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                    <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3">1. Identitas Surat</h3>
+                    <div class="space-y-3">
                         <div>
-                            <label class="block text-xs text-slate-600">Tempat Berangkat (Asal)</label>
-                            <input type="text" id="in_asal" value="Ambon" class="w-full border rounded px-3 py-1.5 text-sm bg-white">
+                            <label for="in_satuan_kerja" class="block text-xs font-semibold text-slate-600 mb-1">Satuan Kerja</label>
+                            <input type="text" id="in_satuan_kerja" name="satuan_kerja" class="w-full border rounded px-3 py-2 text-sm uppercase">
                         </div>
                         <div>
-                            <label class="block text-xs text-slate-600">Tempat Tujuan</label>
-                            <input type="text" id="in_tujuan" value="Kejaksaan Negeri Buru - Namlea" class="w-full border rounded px-3 py-1.5 text-sm bg-white">
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2">
-                        <div>
-                            <label class="block text-xs text-slate-600">Lama Perjalanan</label>
-                            <input type="text" id="in_lama" value="3 (tiga) Hari" class="w-full border rounded px-3 py-1.5 text-sm bg-white">
-                        </div>
-                        <div>
-                            <label class="block text-xs text-slate-600">Tgl Berangkat</label>
-                            <input type="text" id="in_tgl_berangkat" value="26 Januari 2026" class="w-full border rounded px-3 py-1.5 text-sm bg-white">
-                        </div>
-                        <div>
-                            <label class="block text-xs text-slate-600">Tgl Kembali</label>
-                            <input type="text" id="in_tgl_kembali" value="28 Januari 2026" class="w-full border rounded px-3 py-1.5 text-sm bg-white">
+                            <label for="in_nomor" class="block text-xs font-semibold text-slate-600 mb-1">Nomor SPPD</label>
+                            <input type="text" id="in_nomor" name="nomor" class="w-full border rounded px-3 py-2 text-sm font-mono">
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-2">
-                    <div class="flex justify-between items-center">
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Daftar Pengikut (Poin 8)</label>
-                        <button type="button" onclick="addPengikutRow()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-2 py-1 rounded shadow transition cursor-pointer">+ Tambah</button>
-                    </div>
-                    <div id="pengikutInputsContainer" class="space-y-2">
+                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                    <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3">2. Pelaksana Utama</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label for="in_nama_pegawai" class="block text-xs font-semibold text-slate-600 mb-1">Nama Pegawai</label>
+                            <input type="text" id="in_nama_pegawai" name="nama_pegawai" class="w-full border rounded px-3 py-2 text-sm uppercase">
                         </div>
+                        <div>
+                            <label for="in_nip_utama" class="block text-xs font-semibold text-slate-600 mb-1">NIP (18 Digit)</label>
+                            <input type="text" id="in_nip_utama" name="nip_utama" class="w-full border rounded px-3 py-2 text-sm font-mono" maxlength="18">
+                            <span id="warn_nip_utama" class="text-xs text-red-600 font-bold hidden mt-1">⚠️ NIP harus tepat 18 digit angka!</span>
+                        </div>
+                        <div>
+                            <label for="in_pangkat_utama" class="block text-xs font-semibold text-slate-600 mb-1">Pangkat / Golongan</label>
+                            <input type="text" id="in_pangkat_utama" name="pangkat_utama" class="w-full border rounded px-3 py-2 text-sm">
+                        </div>
+                        <div>
+                            <label for="in_jabatan_utama" class="block text-xs font-semibold text-slate-600 mb-1">Jabatan / Instansi</label>
+                            <input type="text" id="in_jabatan_utama" name="jabatan_utama" class="w-full border rounded px-3 py-2 text-sm uppercase">
+                        </div>
+                        <div>
+                            <label for="in_biaya_utama" class="block text-xs font-semibold text-slate-600 mb-1">Tingkat Biaya</label>
+                            <input type="text" id="in_biaya_utama" name="biaya_utama" class="w-full border rounded px-3 py-2 text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                    <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3">3. Rincian Penugasan</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label for="in_maksud" class="block text-xs font-semibold text-slate-600 mb-1">Maksud Perjalanan</label>
+                            <textarea id="in_maksud" name="maksud" rows="2" class="w-full border rounded px-3 py-2 text-sm"></textarea>
+                        </div>
+                        <div>
+                            <label for="in_angkutan" class="block text-xs font-semibold text-slate-600 mb-1">Alat Angkutan</label>
+                            <input type="text" id="in_angkutan" name="angkutan" class="w-full border rounded px-3 py-2 text-sm">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label for="in_asal" class="block text-xs font-semibold text-slate-600 mb-1">Tempat Asal</label>
+                                <input type="text" id="in_asal" name="asal" class="w-full border rounded px-3 py-2 text-sm">
+                            </div>
+                            <div>
+                                <label for="in_tujuan" class="block text-xs font-semibold text-slate-600 mb-1">Tempat Tujuan</label>
+                                <input type="text" id="in_tujuan" name="tujuan" class="w-full border rounded px-3 py-2 text-sm">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div>
+                                <label for="in_lama" class="block text-xs font-semibold text-slate-600 mb-1">Lama (Teks)</label>
+                                <input type="text" id="in_lama" name="lama" placeholder="Misal: 3 (tiga) Hari" class="w-full border rounded px-2 py-2 text-xs">
+                            </div>
+                            <div>
+                                <label for="in_tgl_berangkat" class="block text-xs font-semibold text-slate-600 mb-1">Tgl Berangkat</label>
+                                <input type="date" id="in_tgl_berangkat" name="tgl_berangkat" class="w-full border rounded px-2 py-2 text-xs">
+                            </div>
+                            <div>
+                                <label for="in_tgl_kembali" class="block text-xs font-semibold text-slate-600 mb-1">Tgl Kembali</label>
+                                <input type="date" id="in_tgl_kembali" name="tgl_kembali" class="w-full border rounded px-2 py-2 text-xs">
+                            </div>
+                        </div>
+                        <span id="warn_date" class="text-xs text-red-600 font-bold hidden">⚠️ Tanggal kembali tidak boleh mendahului tanggal berangkat!</span>
+                    </div>
                 </div>
 
-                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-3">
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Anggaran & Otorisasi</label>
-                    <div>
-                        <label class="block text-xs text-slate-600">Instansi Pembebanan (DIPA)</label>
-                        <input type="text" id="in_dipa" value="DIPA Kejaksaan Tinggi Maluku TA 2026" class="w-full border rounded px-3 py-1.5 text-sm bg-white">
+                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider">4. Pengikut</h3>
+                        <button type="button" onclick="addPengikutRow()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded transition">
+                            + Tambah Pengikut
+                        </button>
                     </div>
-                    <div>
-                        <label class="block text-xs text-slate-600">Mata Anggaran / Akun</label>
-                        <input type="text" id="in_akun" value="524111" class="w-full border rounded px-3 py-1.5 text-sm font-mono bg-white">
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
+                    <div id="pengikutContainer" class="space-y-2"></div>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                    <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3">5. Pembebanan & Otorisasi</h3>
+                    <div class="space-y-3">
                         <div>
-                            <label class="block text-xs text-slate-600">Nama PPK</label>
-                            <input type="text" id="in_ppk_nama" value="HELENA MAPUSSA, S.H., M.H." class="w-full border rounded px-3 py-1.5 text-sm bg-white">
+                            <label for="in_dipa" class="block text-xs font-semibold text-slate-600 mb-1">Instansi (DIPA)</label>
+                            <input type="text" id="in_dipa" name="dipa" class="w-full border rounded px-3 py-2 text-sm">
                         </div>
                         <div>
-                            <label class="block text-xs text-slate-600">NIP PPK</label>
-                            <input type="text" id="in_ppk_nip" value="198403152002122001" class="w-full border rounded px-3 py-1.5 text-sm font-mono bg-white">
+                            <label for="in_akun" class="block text-xs font-semibold text-slate-600 mb-1">Akun</label>
+                            <input type="text" id="in_akun" name="akun" class="w-full border rounded px-3 py-2 text-sm font-mono">
                         </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block text-xs text-slate-600">Lokasi Satker Ttd</label>
-                            <input type="text" id="in_lokasi_asal" value="Ambon" class="w-full border rounded px-3 py-1.5 text-sm bg-white">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label for="in_ppk_nama" class="block text-xs font-semibold text-slate-600 mb-1">Nama PPK</label>
+                                <input type="text" id="in_ppk_nama" name="ppk_nama" class="w-full border rounded px-3 py-2 text-sm uppercase">
+                            </div>
+                            <div>
+                                <label for="in_ppk_nip" class="block text-xs font-semibold text-slate-600 mb-1">NIP PPK</label>
+                                <input type="text" id="in_ppk_nip" name="ppk_nip" class="w-full border rounded px-3 py-2 text-sm font-mono" maxlength="18">
+                                <span id="warn_ppk_nip" class="text-xs text-red-600 font-bold hidden mt-1">⚠️ NIP PPK harus tepat 18 digit!</span>
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-xs text-slate-600">Tanggal Ttd Surat</label>
-                            <input type="text" id="in_tgl_ttd" value="23 Januari 2026" class="w-full border rounded px-3 py-1.5 text-sm bg-white">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label for="in_lokasi_asal" class="block text-xs font-semibold text-slate-600 mb-1">Lokasi TTD</label>
+                                <input type="text" id="in_lokasi_asal" name="lokasi_asal" class="w-full border rounded px-3 py-2 text-sm">
+                            </div>
+                            <div>
+                                <label for="in_tgl_ttd" class="block text-xs font-semibold text-slate-600 mb-1">Tanggal TTD</label>
+                                <input type="date" id="in_tgl_ttd" name="tgl_ttd" class="w-full border rounded px-3 py-2 text-sm">
+                            </div>
                         </div>
                     </div>
                 </div>
+
             </form>
         </section>
 
-        <section class="w-full lg:w-7/12 flex flex-col items-center overflow-y-auto max-h-[85vh] bg-slate-300 p-4 rounded-xl border border-slate-400">
-            <div class="w-full max-w-[210mm] bg-white shadow-2xl p-[15mm] spd-document rounded-md mb-6 border border-slate-200" id="previewPage1">
-                </div>
-            <div class="w-full max-w-[210mm] bg-white shadow-2xl p-[15mm] spd-document rounded-md border border-slate-200" id="previewPage2">
+        <section class="w-full lg:w-7/12 flex justify-center bg-gray-300 p-6 rounded-xl overflow-y-auto max-h-[85vh] shadow-inner">
+            <div id="previewPage" class="bg-white p-[15mm] w-full max-w-[210mm] shadow-2xl spd-document border border-gray-200">
                 </div>
         </section>
+        
     </main>
 
-    <div id="printContainer" class="hidden print-area mx-auto"></div>
+<script>
+    let daftarPengikut = [];
 
-    <footer class="bg-slate-800 text-slate-400 text-center py-2 text-xs border-t border-slate-700 no-print mt-auto">
-        &copy; 2026 Kejaksaan Digital - Korps Adhyaksa Maluku Terstandardisasi PMK 113/PMK.05/2012
-    </footer>
+    // ==========================================
+    // 5. SOLUSI PEMUATAN DATA SAAT DIBUKA (OnLoad)
+    // ==========================================
+    document.addEventListener('DOMContentLoaded', () => {
+        loadData();
+        renderPengikut();
+        updatePreview();
+    });
 
-    <script>
-        let daftarPengikut = [
-            { nama: "AMRI KURNIAWAN, S.H., M.H.", jabatan: "RIKSA PEGASUM", ket: "" },
-            { nama: "JHON LEONARDO HUTAGALUNG, SH.,M.H.", jabatan: "RIKSA INTELIJEN", ket: "" },
-            { nama: "RITA AKOLLO, S.H., M.Η.", jabatan: "RIKSA KEPBANG", ket: "" },
-            { nama: "KAREL SAMPE, S.H., Μ.Η.", jabatan: "RIKSA PIDUM", ket: "" },
-            { nama: "SYAMSU YONI SUPRAPTO, S.H.", jabatan: "RIKSA PIDSUS", ket: "" },
-            { nama: "FITRIANY KELWOUW, S.H.", jabatan: "AUDITOR", ket: "" },
-            { nama: "HUSEN, SE., CFrA", jabatan: "AUDITOR", ket: "" },
-            { nama: "JAKRIZAL BAIHAQI TUHAREA", jabatan: "PENJAGA TAHANAN", ket: "" }
-        ];
+    // ==========================================
+    // 1 & 4. AUTOSAVE & LISTENER GLOBAL 
+    // ==========================================
+    document.getElementById('sppdForm').addEventListener('input', (e) => {
+        
+        // 6. SOLUSI VALIDASI NIP OTOMATIS
+        if (e.target.id === 'in_nip_utama') enforceNIP(e.target, 'warn_nip_utama');
+        if (e.target.id === 'in_ppk_nip') enforceNIP(e.target, 'warn_ppk_nip');
+        
+        // 3. VALIDASI TANGGAL KRONOLOGIS (Date Picker Logic)
+        if (e.target.id === 'in_tgl_berangkat' || e.target.id === 'in_tgl_kembali') validateDates();
 
-        function renderPengikutInputs() {
-            const container = document.getElementById('pengikutInputsContainer');
-            container.innerHTML = '';
-            daftarPengikut.forEach((p, idx) => {
-                const row = document.createElement('div');
-                row.className = 'flex gap-1 items-center bg-white p-1.5 rounded border border-slate-200 shadow-sm';
-                row.innerHTML = `
-                    <span class="text-xs font-mono font-bold bg-slate-200 px-1.5 py-1 rounded text-slate-600">${idx+1}</span>
-                    <input type="text" value="${p.nama}" placeholder="Nama Lengkap & Gelar" oninput="updatePengikutData(${idx}, 'nama', this.value)" class="flex-1 text-xs border rounded p-1">
-                    <input type="text" value="${p.jabatan}" placeholder="Jabatan/Fungsional" oninput="updatePengikutData(${idx}, 'jabatan', this.value)" class="w-1/3 text-xs border rounded p-1">
-                    <button type="button" onclick="removePengikutRow(${idx})" class="text-red-500 hover:text-red-700 font-bold px-1 text-sm">✕</button>
-                `;
-                container.appendChild(row);
-            });
+        saveData(); // Autosave setiap kali ada yang diketik
+        updatePreview(); // Perbarui Live Preview
+    });
+
+    // ==========================================
+    // 2. RESTRIKSI INPUT NIP (Input Masking)
+    // ==========================================
+    function enforceNIP(inputEl, warnId) {
+        let val = inputEl.value.replace(/\D/g, ''); // Memaksa input agar hanya bisa angka
+        if (val.length > 18) val = val.slice(0, 18); // Memotong karakter jika > 18
+        inputEl.value = val;
+        
+        const warnEl = document.getElementById(warnId);
+        // Menampilkan warning jika diketik namun belum mencapai 18 digit
+        if (val.length > 0 && val.length < 18) {
+            warnEl.classList.remove('hidden');
+        } else {
+            warnEl.classList.add('hidden');
         }
+    }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const cache = localStorage.getItem('sppd_data_cache');
-            if (cache) {
-                const data = JSON.parse(cache);
-                if(document.getElementById('in_satuan_kerja')) document.getElementById('in_satuan_kerja').value = data.satuan_kerja || "Kejaksaan Tinggi Maluku";
-                if(document.getElementById('in_nomor')) document.getElementById('in_nomor').value = data.nomor || "SPPD-024/PPK/01/2026";
-                if(document.getElementById('in_nama_pegawai')) document.getElementById('in_nama_pegawai').value = data.nama_pegawai || "LUTHER KURNIAWAN, S.H., M.H.";
-                if(document.getElementById('in_nip_utama')) document.getElementById('in_nip_utama').value = data.nip_utama || "197405082000031002";
-                if(document.getElementById('in_pangkat_utama')) document.getElementById('in_pangkat_utama').value = data.pangkat_utama || "Jaksa Madya (IV/a)";
-                if(document.getElementById('in_jabatan_utama')) document.getElementById('in_jabatan_utama').value = data.jabatan_utama || "Asisten Bidang Pengawasan Kejaksaan Tinggi Maluku";
-                if(document.getElementById('in_biaya_utama')) document.getElementById('in_biaya_utama').value = data.biaya_utama || "C";
-                if(document.getElementById('in_maksud')) document.getElementById('in_maksud').value = data.maksud || "";
-                if(document.getElementById('in_angkutan')) document.getElementById('in_angkutan').value = data.angkutan || "Pesawat - Mobil";
-                if(document.getElementById('in_asal')) document.getElementById('in_asal').value = data.asal || "Ambon";
-                if(document.getElementById('in_tujuan')) document.getElementById('in_tujuan').value = data.tujuan || "Kejaksaan Negeri Buru - Namlea";
-                if(document.getElementById('in_lama')) document.getElementById('in_lama').value = data.lama || "3 (tiga) Hari";
-                if(document.getElementById('in_tgl_berangkat')) document.getElementById('in_tgl_berangkat').value = data.tgl_berangkat || "26 Januari 2026";
-                if(document.getElementById('in_tgl_kembali')) document.getElementById('in_tgl_kembali').value = data.tgl_kembali || "28 Januari 2026";
-                if(document.getElementById('in_dipa')) document.getElementById('in_dipa').value = data.dipa || "DIPA Kejaksaan Tinggi Maluku TA 2026";
-                if(document.getElementById('in_akun')) document.getElementById('in_akun').value = data.akun || "524111";
-                if(document.getElementById('in_ppk_nama')) document.getElementById('in_ppk_nama').value = data.ppk_nama || "HELENA MAPUSSA, S.H., M.H.";
-                if(document.getElementById('in_ppk_nip')) document.getElementById('in_ppk_nip').value = data.ppk_nip || "198403152002122001";
-                if(document.getElementById('in_lokasi_asal')) document.getElementById('in_lokasi_asal').value = data.lokasi_satker_asal || "Ambon";
-                if(document.getElementById('in_tgl_ttd')) document.getElementById('in_tgl_ttd').value = data.tgl_ttd || "23 Januari 2026";
-                daftarPengikut = data.pengikut || [];
-            }
-            
-            renderPengikutInputs();
-            updateDocumentView();
-            
-            const allInputs = document.querySelectorAll('#sppdForm input, #sppdForm textarea');
-            allInputs.forEach(input => {
-                input.addEventListener('input', () => {
-                    updateDocumentView();
-                });
-            });
+    // Peringatan interaktif untuk Date Picker
+    function validateDates() {
+        const start = document.getElementById('in_tgl_berangkat').value;
+        const end = document.getElementById('in_tgl_kembali').value;
+        const warn = document.getElementById('warn_date');
+        // Tanggal kembali tidak boleh lebih lama dari tanggal berangkat
+        if (start && end && new Date(end) < new Date(start)) {
+            warn.classList.remove('hidden');
+        } else {
+            warn.classList.add('hidden');
+        }
+    }
+
+    // KONVERTER TANGGAL LOKAL (YYYY-MM-DD ke "DD Bulan YYYY")
+    function formatTanggalIndo(dateStr) {
+        if (!dateStr) return "";
+        const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        const d = new Date(dateStr);
+        if (isNaN(d.getTime())) return dateStr;
+        return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+    }
+
+    // ==========================================
+    // MANAJEMEN PENGINPUTAN PENGIKUT
+    // ==========================================
+    function addPengikutRow() {
+        daftarPengikut.push({ nama: '', jabatan: '', ket: '' });
+        renderPengikut();
+        saveData();
+        updatePreview();
+    }
+
+    function removePengikutRow(idx) {
+        daftarPengikut.splice(idx, 1);
+        renderPengikut();
+        saveData();
+        updatePreview();
+    }
+
+    function updatePengikutField(idx, field, val) {
+        daftarPengikut[idx][field] = val;
+        saveData();
+        updatePreview();
+    }
+
+    function renderPengikut() {
+        const container = document.getElementById('pengikutContainer');
+        container.innerHTML = '';
+        daftarPengikut.forEach((p, i) => {
+            container.innerHTML += `
+                <div class="flex flex-col gap-2 bg-white p-3 rounded border border-gray-200 shadow-sm relative">
+                    <div class="absolute top-2 right-2 cursor-pointer text-red-500 font-bold hover:text-red-700" onclick="removePengikutRow(${i})">✕</div>
+                    <label class="text-xs font-bold text-gray-500">Pengikut Ke-${i+1}</label>
+                    <input type="text" placeholder="Nama Lengkap" value="${p.nama}" oninput="updatePengikutField(${i}, 'nama', this.value)" class="w-full border rounded px-2 py-1.5 text-xs uppercase">
+                    <div class="flex gap-2">
+                        <input type="text" placeholder="Jabatan" value="${p.jabatan}" oninput="updatePengikutField(${i}, 'jabatan', this.value)" class="w-1/2 border rounded px-2 py-1.5 text-xs uppercase">
+                        <input type="text" placeholder="Keterangan" value="${p.ket}" oninput="updatePengikutField(${i}, 'ket', this.value)" class="w-1/2 border rounded px-2 py-1.5 text-xs">
+                    </div>
+                </div>
+            `;
         });
+    }
 
-        function addPengikutRow() {
-            daftarPengikut.push({ nama: '', jabatan: '', ket: '' });
-            renderPengikutInputs();
-            updateDocumentView();
+    // ==========================================
+    // FUNGSI AUTOSAVE (MENCEGAH DATA HILANG)
+    // ==========================================
+    function saveData() {
+        const data = {};
+        const inputs = document.querySelectorAll('#sppdForm input:not([type="button"]), #sppdForm textarea');
+        inputs.forEach(el => data[el.id] = el.value);
+        data['pengikut'] = daftarPengikut;
+        localStorage.setItem('sppd_data_autosave', JSON.stringify(data));
+    }
+
+    // FUNGSI MUAT KEMBALI DATA
+    function loadData() {
+        const saved = localStorage.getItem('sppd_data_autosave');
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                for (const key in data) {
+                    if (key === 'pengikut') {
+                        daftarPengikut = data[key] || [];
+                    } else {
+                        const el = document.getElementById(key);
+                        if (el) el.value = data[key];
+                    }
+                }
+            } catch (e) {
+                console.error("Gagal memuat autosave lokal", e);
+            }
         }
+    }
 
-        function removePengikutRow(idx) {
-            daftarPengikut.splice(idx, 1);
-            renderPengikutInputs();
-            updateDocumentView();
-        }
+    // ==========================================
+    // LIVE PREVIEW DOKUMEN YANG STABIL & AMAN
+    // ==========================================
+    function getVal(id) {
+        const el = document.getElementById(id);
+        return el ? el.value : '';
+    }
 
-        function updatePengikutData(idx, field, val) {
-            daftarPengikut[idx][field] = val;
-            updateDocumentView();
-        }
+    function updatePreview() {
+        try {
+            const preview = document.getElementById('previewPage');
+            if(!preview) return;
 
-        function updateDocumentView() {
-            const satuan_kerja = document.getElementById('in_satuan_kerja').value;
-            const nomor = document.getElementById('in_nomor').value;
-            const nama_pegawai = document.getElementById('in_nama_pegawai').value;
-            const nip_utama = document.getElementById('in_nip_utama').value;
-            const pangkat_utama = document.getElementById('in_pangkat_utama').value;
-            const jabatan_utama = document.getElementById('in_jabatan_utama').value;
-            const biaya_utama = document.getElementById('in_biaya_utama').value;
-            const maksud = document.getElementById('in_maksud').value;
-            const angkutan = document.getElementById('in_angkutan').value;
-            const asal = document.getElementById('in_asal').value;
-            const tujuan = document.getElementById('in_tujuan').value;
-            const lama = document.getElementById('in_lama').value;
-            const tgl_berangkat = document.getElementById('in_tgl_berangkat').value;
-            const tgl_kembali = document.getElementById('in_tgl_kembali').value;
-            const dipa = document.getElementById('in_dipa').value;
-            const akun = document.getElementById('in_akun').value;
-            const ppk_nama = document.getElementById('in_ppk_nama').value;
-            const ppk_nip = document.getElementById('in_ppk_nip').value;
-            const lokasi_satker_asal = document.getElementById('in_lokasi_asal').value;
-            const tgl_ttd = document.getElementById('in_tgl_ttd').value;
+            const tglB = formatTanggalIndo(getVal('in_tgl_berangkat'));
+            const tglK = formatTanggalIndo(getVal('in_tgl_kembali'));
+            const tglT = formatTanggalIndo(getVal('in_tgl_ttd'));
 
-            const warningEl = document.getElementById('nip_warning');
-            if (warningEl) warningEl.textContent = validasiNIP(nip_utama);
-
-            let pengikutRowsHtml = '';
+            let rowHtml = '';
             if (daftarPengikut.length === 0) {
-                pengikutRowsHtml = `<tr><td colspan="4" class="text-center italic py-2">Tidak ada pengikut</td></tr>`;
+                rowHtml = `<tr><td colspan="4" class="border border-black p-1 text-center italic text-xs">Tidak ada pengikut</td></tr>`;
             } else {
                 daftarPengikut.forEach((p, i) => {
-                    pengikutRowsHtml += `
+                    rowHtml += `
                         <tr>
-                            <td style="text-align: center; width: 5%; border: 1px solid #000;">${i + 1}.</td>
-                            <td style="width: 45%; font-weight: bold; border: 1px solid #000;">${p.nama || '-'}</td>
-                            <td style="width: 30%; border: 1px solid #000;">${p.jabatan || '-'}</td>
-                            <td style="width: 20%; border: 1px solid #000;">${p.ket || ''}</td>
+                            <td class="border border-black p-1 text-center text-xs">${i+1}.</td>
+                            <td class="border border-black p-1 font-bold text-xs uppercase">${p.nama || '-'}</td>
+                            <td class="border border-black p-1 text-xs uppercase">${p.jabatan || '-'}</td>
+                            <td class="border border-black p-1 text-xs">${p.ket || '-'}</td>
                         </tr>
                     `;
                 });
             }
 
-            const page1Html = `
-                <div class="w-full flex justify-between items-start border-bottom pb-2 mb-4" style="border-bottom: 2px solid #000000; display: flex; justify-content: space-between;">
-                    <div>
-                        <div style="font-weight: bold; font-size: 10pt; text-transform: uppercase;">KEMENTERIAN / LEMBAGA</div>
-                        <div style="font-weight: bold; font-size: 11pt; letter-spacing: 0.5px;">${satuan_kerja}</div>
-                        <div style="font-size: 7.5pt; color: #444444; margin-top: 5px; max-width: 350px; line-height: 1.1;">
-                            LAMPIRAN I PERATURAN MENTERI KEUANGAN INDONESIA NOMOR: 113/PMK.05/2012 TENTANG PERJALANAN DINAS JABATAN DALAM NEGERI BAGI PEJABAT NEGARA, PEGAWAI NEGERI DAN PEGAWAI TIDAK TETAP
-                        </div>
-                    </div>
-                    <div style="font-size: 9.5pt; font-family: monospace; text-align: left; border-left: 1px solid #ccc; padding-left: 10px;">
-                        <div>LEMBARAN :</div>
-                        <div>KODE     :</div>
-                        <div>NOMOR    : ${nomor}</div>
-                    </div>
-                </div>
-                <div style="text-align: center; margin: 15px 0 20px 0;"><span style="font-weight: bold; font-size: 13pt; border-bottom: 1.5px solid #000000;">SURAT PERJALANAN DINAS (SPD)</span></div>
-                <table class="spd-table-main" style="width: 100%; margin-bottom: 15px;">
-                    <tr><td style="width: 4%;">1.</td><td style="width: 40%;">Pejabat Pembuat Komitmen</td><td style="width: 2%;">:</td><td style="width: 54%; font-weight: bold;">${ppk_nama}</td></tr>
-                    <tr style="border-top: 1px solid #eee;"><td>2.</td><td>Nama/NIP Pegawai yang melaksanakan Perjalanan Dinas</td><td>:</td><td style="font-weight: bold;">${nama_pegawai} / NIP. ${nip_utama}</td></tr>
-                    <tr style="border-top: 1px solid #eee;"><td>3.</td><td>a. Pangkat dan Golongan<br>b. Jabatan / Instansi<br>c. Tingkat Biaya Perjalanan Dinas</td><td>:<br>:<br>:</td><td>a. ${pangkat_utama}<br>b. ${jabatan_utama}<br>c. ${biaya_utama}</td></tr>
-                    <tr style="border-top: 1px solid #eee;"><td>4.</td><td>Maksud Perjalanan Dinas</td><td>:</td><td>${maksud}</td></tr>
-                    <tr style="border-top: 1px solid #eee;"><td>5.</td><td>Alat angkutan yang dipergunakan</td><td>:</td><td>${angkutan}</td></tr>
-                    <tr style="border-top: 1px solid #eee;"><td>6.</td><td>a. Tempat Berangkat<br>b. Tempat Tujuan</td><td>:<br>:</td><td>a. ${asal}<br>b. ${tujuan}</td></tr>
-                    <tr style="border-top: 1px solid #eee;"><td>7.</td><td>a. Lamanya Perjalanan Dinas<br>b. Tanggal Berangkat<br>c. Tanggal Harus Kembali</td><td>:<br>:<br>:</td><td>a. ${lama}<br>b. ${tgl_berangkat}<br>c. ${tgl_kembali}</td></tr>
-                    <tr style="border-top: 1px solid #eee;"><td>8.</td><td colspan="3">Pengikut:</td></tr>
+            preview.innerHTML = `
+                <div class="text-right text-sm font-mono mb-6">NOMOR: ${getVal('in_nomor')}</div>
+                <div class="text-center font-bold text-lg border-b-[1.5px] border-black inline-block mx-auto mb-6 flex justify-center max-w-max">SURAT PERJALANAN DINAS (SPD)</div>
+                <table class="w-full text-sm mb-6 align-top">
+                    <tr><td class="w-8 pb-2">1.</td><td class="w-[45%] pb-2">Pejabat Pembuat Komitmen</td><td class="w-4 pb-2">:</td><td class="font-bold pb-2 uppercase">${getVal('in_ppk_nama')}</td></tr>
+                    <tr class="border-t border-gray-300"><td class="py-2">2.</td><td class="py-2">Nama Pegawai yang melaksanakan</td><td class="py-2">:</td><td class="font-bold py-2 uppercase">${getVal('in_nama_pegawai')}<br>NIP. ${getVal('in_nip_utama')}</td></tr>
+                    <tr class="border-t border-gray-300"><td class="py-2">3.</td><td class="py-2">a. Pangkat dan Golongan<br>b. Jabatan / Instansi<br>c. Tingkat Biaya</td><td class="py-2">:<br>:<br>:</td><td class="py-2">a. ${getVal('in_pangkat_utama')}<br>b. <span class="uppercase">${getVal('in_jabatan_utama')}</span><br>c. ${getVal('in_biaya_utama')}</td></tr>
+                    <tr class="border-t border-gray-300"><td class="py-2">4.</td><td class="py-2">Maksud Perjalanan</td><td class="py-2">:</td><td class="py-2">${getVal('in_maksud')}</td></tr>
+                    <tr class="border-t border-gray-300"><td class="py-2">5.</td><td class="py-2">Alat Angkutan</td><td class="py-2">:</td><td class="py-2">${getVal('in_angkutan')}</td></tr>
+                    <tr class="border-t border-gray-300"><td class="py-2">6.</td><td class="py-2">a. Tempat Berangkat<br>b. Tempat Tujuan</td><td class="py-2">:<br>:</td><td class="py-2">a. ${getVal('in_asal')}<br>b. ${getVal('in_tujuan')}</td></tr>
+                    <tr class="border-t border-gray-300"><td class="py-2">7.</td><td class="py-2">a. Lama Perjalanan<br>b. Tanggal Berangkat<br>c. Tanggal Kembali</td><td class="py-2">:<br>:<br>:</td><td class="py-2">a. ${getVal('in_lama')}<br>b. ${tglB}<br>c. ${tglK}</td></tr>
                 </table>
-                <table class="spd-border-table" style="margin-bottom: 20px; width: 100%;">
-                    <thead><tr style="background-color: #f2f2f2;"><th>No.</th><th>Nama</th><th>Jabatan</th><th>Keterangan</th></tr></thead>
-                    <tbody>${pengikutRowsHtml}</tbody>
+                <div class="text-sm font-bold mb-2">8. Pengikut:</div>
+                <table class="w-full text-sm mb-6 border-collapse">
+                    <tr class="bg-gray-100">
+                        <th class="border border-black p-1 w-8">No.</th>
+                        <th class="border border-black p-1">Nama</th>
+                        <th class="border border-black p-1">Jabatan</th>
+                        <th class="border border-black p-1">Keterangan</th>
+                    </tr>
+                    ${rowHtml}
                 </table>
-                <table class="spd-table-main" style="width: 100%; margin-bottom: 25px;">
-                    <tr style="border-top: 1px solid #eee;"><td style="width: 4%;">9.</td><td style="width: 40%;">Pembebanan Anggaran<br>&nbsp;&nbsp;a. Instansi<br>&nbsp;&nbsp;b. Akun</td><td><br>:<br>:</td><td><br>a. ${dipa}<br>b. ${akun}</td></tr>
-                    <tr style="border-top: 1px solid #eee;"><td>10.</td><td>Keterangan Lain-Lain</td><td>:</td><td>-</td></tr>
+                <table class="w-full text-sm mb-8 align-top">
+                    <tr class="border-t border-gray-300"><td class="w-8 py-2">9.</td><td class="w-[45%] py-2">Pembebanan Anggaran<br>&nbsp;&nbsp;&nbsp;a. Instansi<br>&nbsp;&nbsp;&nbsp;b. Akun</td><td class="w-4 py-2"><br>:<br>:</td><td class="py-2"><br>a. ${getVal('in_dipa')}<br>b. ${getVal('in_akun')}</td></tr>
                 </table>
-                <div class="w-full flex justify-end text-sm" style="display: flex; justify-content: flex-end;">
-                    <div style="width: 260px;">
-                        <div>${lokasi_satker_asal}, ${tgl_ttd}</div>
-                        <div class="mt-2 font-bold text-xs">Pejabat Pembuat Komitmen</div>
-                        <div style="height: 45px; color: #047857; font-family: monospace;">[ TTD DIGITAL ]<br>#KEJAKSAANDIGITAL</div>
-                        <div style="text-decoration: underline; font-weight: bold;">${ppk_nama}</div>
-                        <div>NIP. ${ppk_nip}</div>
+                <div class="flex justify-end text-sm">
+                    <div class="w-64">
+                        <p>${getVal('in_lokasi_asal')}, ${tglT}</p>
+                        <p class="font-bold mb-16">Pejabat Pembuat Komitmen</p>
+                        <p class="font-bold underline uppercase">${getVal('in_ppk_nama')}</p>
+                        <p>NIP. ${getVal('in_ppk_nip')}</p>
                     </div>
                 </div>
             `;
+        } catch(e) {
+            console.error("Gagal melakukan rendering Live Preview", e);
+        }
+    }
 
-            const page2Html = `
-                <div class="w-full grid grid-cols-2 gap-x-4 text-[9.5pt]" style="display: grid; grid-template-columns: 1fr 1fr; grid-gap: 15px;">
-                    <div class="space-y-4" style="border-right: 1px solid #000000; padding-right: 15px;">
-                        <div style="border: 1px solid #000; padding: 6px; margin-bottom: 15px;">
-                            <table>
-                                <tr><td style="width:30%;">Tiba di</td><td>: ${tujuan}</td></tr>
-                                <tr><td>Pada Tanggal</td><td>: </td></tr>
-                                <tr><td>Kepala</td><td>: </td></tr>
-                                <tr><td colspan="2" style="height:45px;"></td></tr>
-                                <tr><td colspan="2">(.................................................................)</td></tr>
-                                <tr><td>NIP.</td><td>:</td></tr>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="space-y-4" style="padding-left: 5px;">
-                        <div style="border: 1px solid #000; padding: 6px; margin-bottom: 15px;">
-                            <table>
-                                <tr><td style="width:35%;">Berangkat dari</td><td>: ${asal}</td></tr>
-                                <tr><td>Tempat Kedudukan</td><td>: Kejaksaan Tinggi Maluku</td></tr>
-                                <tr><td>Pada Tanggal</td><td>: ${tgl_berangkat}</td></tr>
-                                <tr><td colspan="2" style="font-weight: bold;">PEJABAT PEMBUAT KOMITMEN</td></tr>
-                                <tr><td colspan="2" style="height:25px; color: #15803d; font-family: monospace;">#KEJAKSAANDIGITAL</td></tr>
-                                <tr><td colspan="2" style="text-decoration: underline; font-weight: bold;">${ppk_nama}</td></tr>
-                                <tr><td>NIP.</td><td>: ${ppk_nip}</td></tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div style="border: 1px solid #000; padding: 8px; margin-top: 15px;">
-                    <table>
-                        <tr>
-                            <td style="width:50%; border-right: 1px dashed #ccc; padding-right: 10px;">
-                                <strong>VI. Tiba di:</strong> ${asal}<br>Pada tanggal: ${tgl_kembali}<br><br>
-                                <span style="font-weight: bold;">PEJABAT PEMBUAT KOMITMEN</span><br>
-                                <div style="height:25px; color:#15803d; font-family:monospace;">#KEJAKSAANDIGITAL</div>
-                                <span style="text-decoration:underline; font-weight:bold;">${ppk_nama}</span><br>NIP. ${ppk_nip}
-                            </td>
-                            <td style="width:50%; padding-left: 10px;">
-                                Telah diperiksa dengan keterangan bahwa perjalanan tersebut atas perintahnya dan semata-mata untuk kepentingan jabatan.<br><br>
-                                <span style="font-weight: bold;">PEJABAT PEMBUAT KOMITMEN</span><br>
-                                <div style="height:25px; color:#15803d; font-family:monospace;">#KEJAKSAANDIGITAL</div>
-                                <span style="text-decoration:underline; font-weight:bold;">${ppk_nama}</span><br>NIP. ${ppk_nip}
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <div style="margin-top: 15px; font-size: 8.5pt; border: 1px solid #000; padding: 6px;"><strong>VII. Catatan Lain-Lain:</strong> -</div>
-                <div style="margin-top: 8px; font-size: 8pt; border: 1px dashed #ff0000; padding: 6px;">
-                    <strong>VIII. PERHATIAN:</strong><br>PPK yang menerbitkan SPPD, pegawai yang melakukan perjalanan dinas, para pejabat yang mengesahkan tanggal berangkat/tiba, serta bendahara pengeluaran bertanggung jawab berdasarkan peraturan Keuangan Negara.
-                </div>
-            `;
-
-            document.getElementById('previewPage1').innerHTML = page1Html;
-            document.getElementById('previewPage2').innerHTML = page2Html;
-
-            const printContainer = document.getElementById('printContainer');
-            printContainer.innerHTML = `<div class="spd-document"><div>${page1Html}</div><div class="page-break"></div><div style="margin-top: 10mm;">${page2Html}</div></div>`;
-
-            saveToLocalStorage();
+    // ==========================================
+    // 7 & 8. FUNGSI GENERATE WORD 100% TEMPLATE (DocxTemplater)
+    // ==========================================
+    function downloadWord() {
+        // Blokir jika tanggal kembali lebih dulu dari tanggal berangkat
+        const start = document.getElementById('in_tgl_berangkat').value;
+        const end = document.getElementById('in_tgl_kembali').value;
+        if (start && end && new Date(end) < new Date(start)) {
+            alert("GAGAL UNDUH: Tanggal kembali tidak boleh mendahului tanggal berangkat. Harap perbaiki tanggal Anda.");
+            return;
         }
 
-        // FUNGSI EKSPOR DIKUNCI 100% - MENYESUAIKAN TYPO ASLI PADA TEMPLATE PDF/WORD
-        function downloadWord() {
-            const nomorFile = document.getElementById('in_nomor').value.replace(/[\/\*?:|"<>]/g, '-');
-            
-            PizZipUtils.getBinaryContent("template.docx", function (error, content) {
-                if (error) {
-                    alert("Gagal memuat template.docx. Pastikan berkas tersebut telah diunggah di dalam repositori Anda.");
-                    return;
-                }
+        // Memanggil "template.docx" (Pastikan huruf T nya kecil/sesuai di repository GitHub)
+        PizZipUtils.getBinaryContent("template.docx", function (error, content) {
+            if (error) {
+                alert("Sistem tidak dapat menemukan file 'template.docx' di server GitHub Anda.");
+                return;
+            }
 
+            try {
                 const zip = new PizZip(content);
-                const doc = new window.docxtemplater(zip, {
-                    paragraphLoop: true,
-                    linebreaks: true,
-                });
-
-                // PEMETAAN ROBUST: Menyamakan persis semua keunikan string di template.pdf Anda
-                const contextData = {
-                    // Kop Atas
-                    "satuan_kerja": document.getElementById('in_satuan_kerja').value, 
-                    "nomor": document.getElementById('in_nomor').value,              
+                const doc = new window.docxtemplater(zip, { paragraphLoop: true, linebreaks: true });
+                
+                // MAPPING VARIABEL: Secara paksa mengubah string ke huruf KAPITAL (Sesuai Tata Naskah Dinas)
+                const dataContext = {
+                    satuan_kerja: getVal('in_satuan_kerja').toUpperCase(),
+                    nomor: getVal('in_nomor'),
+                    nama_pegawai: getVal('in_nama_pegawai').toUpperCase(),
+                    nip_utama: getVal('in_nip_utama'),
+                    pangkat_utama: getVal('in_pangkat_utama'),
+                    jabatan_utama: getVal('in_jabatan_utama').toUpperCase(),
+                    biaya_utama: getVal('in_biaya_utama'),
+                    maksud: getVal('in_maksud'),
+                    angkutan: getVal('in_angkutan'),
+                    asal: getVal('in_asal'),
+                    tujuan: getVal('in_tujuan'),
+                    lama: getVal('in_lama'),
                     
-                    // Poin 1 & 2
-                    "ppk_nama": document.getElementById('in_ppk_nama').value,          
-                    "nama_pegawai": document.getElementById('in_nama_pegawai').value,
+                    // Menggunakan Format Tanggal Lokal
+                    tgl_berangkat: formatTanggalIndo(getVal('in_tgl_berangkat')),
+                    tgl_kembali: formatTanggalIndo(getVal('in_tgl_kembali')),
                     
-                    // Toleransi error format pada POIN 2: "nip_utama)"
-                    "nip_utama": document.getElementById('in_nip_utama').value,        
-                    "nip_utama)": document.getElementById('in_nip_utama').value,       
+                    dipa: getVal('in_dipa'),
+                    akun: getVal('in_akun'),
+                    ppk_nama: getVal('in_ppk_nama').toUpperCase(),
+                    ppk_nip: getVal('in_ppk_nip'),
+                    lokasi_satker_asal: getVal('in_lokasi_asal'),
+                    tgl_ttd: formatTanggalIndo(getVal('in_tgl_ttd')),
                     
-                    // Poin 3
-                    "pangkat_utama": document.getElementById('in_pangkat_utama').value,  
-                    
-                    // Toleransi error format pada POIN 3b: "jabatan_utama}"
-                    "jabatan_utama": document.getElementById('in_jabatan_utama').value,  
-                    "jabatan_utama}": document.getElementById('in_jabatan_utama').value, 
-                    
-                    // Toleransi error format pada POIN 3c: "(biaya_utama}"
-                    "biaya_utama": document.getElementById('in_biaya_utama').value,    
-                    "biaya_utama}": document.getElementById('in_biaya_utama').value,   
-                    "(biaya_utama}": document.getElementById('in_biaya_utama').value,   
-                    
-                    // Poin 4, 5, 6
-                    "maksud": document.getElementById('in_maksud').value,              
-                    "angkutan": document.getElementById('in_angkutan').value,          
-                    
-                    // Toleransi error format pada POIN 6a: "{asal)"
-                    "asal": document.getElementById('in_asal').value,                  
-                    "asal)": document.getElementById('in_asal').value,                  
-                    "{asal)": document.getElementById('in_asal').value,                  
-                    "asal ": document.getElementById('in_asal').value,                  
-                    
-                    "tujuan": document.getElementById('in_tujuan').value,              
-                    
-                    // Poin 7
-                    // Toleransi error format pada POIN 7a: "(lama)"
-                    "lama": document.getElementById('in_lama').value,                  
-                    "(lama)": document.getElementById('in_lama').value,                  
-                    
-                    "tgl_berangkat": document.getElementById('in_tgl_berangkat').value,
-                    
-                    // Toleransi error format pada POIN 7c: "tgl_kembali}"
-                    "tgl_kembali": document.getElementById('in_tgl_kembali').value,    
-                    "tgl_kembali}": document.getElementById('in_tgl_kembali').value,   
-                    
-                    // Poin 9
-                    // Toleransi error format pada POIN 9a: "{dipa)"
-                    "dipa": document.getElementById('in_dipa').value,                  
-                    "dipa)": document.getElementById('in_dipa').value,                  
-                    "{dipa)": document.getElementById('in_dipa').value,                  
-                    
-                    // Toleransi error format pada POIN 9b: "{akun " (kurung kurawal tidak ditutup)
-                    "akun": document.getElementById('in_akun').value,                  
-                    "akun ": document.getElementById('in_akun').value,                  
-                    "{akun ": document.getElementById('in_akun').value,                  
-                    
-                    // Tanda Tangan Depan
-                    // Toleransi error format pada bagian lokasi: "lokasi_satker_asal}"
-                    "lokasi_satker_asal": document.getElementById('in_lokasi_asal').value, 
-                    "lokasi_satker_asal}": document.getElementById('in_lokasi_asal').value, 
-                    
-                    "tgl_ttd": document.getElementById('in_tgl_ttd').value,            
-                    "ppk_nip": document.getElementById('in_ppk_nip').value,            
-                    
-                    // Poin VIII Belakang
-                    // Toleransi error format pada bagian akhir: "{ppk nama "
-                    "ppk nama": document.getElementById('in_ppk_nama').value,          
-                    "ppk nama ": document.getElementById('in_ppk_nama').value,         
-                    "{ppk nama ": document.getElementById('in_ppk_nama').value,         
-                    
-                    // Perulangan dinamis tabel pengikut Poin 8
-                    "pengikut": daftarPengikut.map((p, index) => ({
-                        no: index + 1,
-                        nama: p.nama || '-',
-                        jabatan: p.jabatan || '-',
-                        ket: p.ket || ''
+                    // PENGIKUT: Otomatis Kapital untuk nama dan jabatan
+                    pengikut: daftarPengikut.map((p, i) => ({
+                        no: i + 1,
+                        nama: p.nama.toUpperCase(),
+                        jabatan: p.jabatan.toUpperCase(),
+                        ket: p.ket
                     }))
                 };
 
-                try {
-                    doc.render(contextData);
-                    
-                    const out = doc.getZip().generate({
-                        type: "blob",
-                        mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                    });
+                doc.render(dataContext);
 
-                    const url = URL.createObjectURL(out);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `SPPD_${nomorFile}.docx`;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                    
-                } catch (err) {
-                    console.error(err);
-                    alert("Terjadi kesalahan teknis saat menerjemahkan data ke dalam berkas Word. Periksa kembali kecocokan tag kurung kurawal di file template.docx Anda.");
-                }
-            });
-        }
+                const blob = doc.getZip().generate({
+                    type: "blob",
+                    mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                });
+
+                // Membuat nama file unduhan SPPD secara dinamis sesuai nama Pegawai
+                let baseName = getVal('in_nama_pegawai').replace(/[^a-zA-Z0-9]/g, '_');
+                if(!baseName) baseName = "Pegawai";
+
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = `SPPD_${baseName}.docx`;
                 
-        function saveToLocalStorage() {
-            const formData = {
-                satuan_kerja: document.getElementById('in_satuan_kerja').value,
-                nomor: document.getElementById('in_nomor').value,
-                nama_pegawai: document.getElementById('in_nama_pegawai').value,
-                nipUtama: document.getElementById('in_nip_utama').value,
-                pangkatUtama: document.getElementById('in_pangkat_utama').value,
-                jabatanUtama: document.getElementById('in_jabatan_utama').value,
-                biayaUtama: document.getElementById('in_biaya_utama').value,
-                maksud: document.getElementById('in_maksud').value,
-                angkutan: document.getElementById('in_angkutan').value,
-                asal: document.getElementById('in_asal').value,
-                tujuan: document.getElementById('in_tujuan').value,
-                lama: document.getElementById('in_lama').value,
-                tglBerangkat: document.getElementById('in_tgl_berangkat').value,
-                tglKembali: document.getElementById('in_tgl_kembali').value,
-                dipa: document.getElementById('in_dipa').value,
-                akun: document.getElementById('in_akun').value,
-                ppkNama: document.getElementById('in_ppk_nama').value,
-                ppkNip: document.getElementById('in_ppk_nip').value,
-                lokasi_satker_asal: document.getElementById('in_lokasi_asal').value,
-                tgl_ttd: document.getElementById('in_tgl_ttd').value,
-                pengikut: daftarPengikut
-            };
-            localStorage.setItem('sppd_data_cache', JSON.stringify(formData));
-        }
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
 
-        function validasiNIP(nip) {
-            const cleanNIP = nip.replace(/\s+/g, ''); 
-            if (cleanNIP.length !== 18 && cleanNIP.length > 0) {
-                return "⚠️ NIP harus berjumlah 18 digit!";
+            } catch (e) {
+                console.error("Template Render Error:", e);
+                alert("Aplikasi macet karena ada kurung kurawal '{ ... }' yang hilang/rusak di dalam file Word (template.docx) Anda.");
             }
-            return "";
-        }
-    </script>
+        });
+    }
+</script>
 </body>
 </html>
