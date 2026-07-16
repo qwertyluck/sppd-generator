@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    <!-- CDN Dependensi DocxTemplater & PizZip -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.50.0/docxtemplater.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pizzip/3.1.7/pizzip.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pizzip/3.1.7/pizzip-utils.js"></script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aplikasi Generator SPPD - Kejaksaan Digital</title>
@@ -546,42 +551,80 @@
             const page1 = document.getElementById('previewPage1').innerHTML;
             const page2 = document.getElementById('previewPage2').innerHTML;
             
-            // Satukan html dengan style dasar untuk MS Word interpreter
-            const fullHtml = `
-                <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-                <head>
-                    <title>SPPD Kejaksaan Digital</title>
-                    <style>
-                        body { font-family: 'Arial', sans-serif; font-size: 10pt; }
-                        table { width: 100%; border-collapse: collapse; }
-                        td { vertical-align: top; padding: 3px; }
-                        .page-break { page-break-before: always; break-before: page; }
-                    </style>
-                </head>
-                <body>
-                    ${page1}
-                    <br class="page-break" style="page-break-before: always; break-before: page;" />
-                    <div style="margin-top: 20px;"></div>
-                    ${page2}
-                </body>
-                </html>
-            `;
+function downloadWord() {
+    const nomor = document.getElementById('in_nomor').value.replace(/[\/\*?:|"<>]/g, '-');
+    
+    // 1. Memuat file template.docx dari repositori GitHub
+    PizZipUtils.getBinaryContent("template.docx", function (error, content) {
+        if (error) {
+            alert("Gagal memuat templat dokumen asli. Pastikan file template.docx sudah diunggah di GitHub.");
+            console.error(error);
+            return;
+        }
+
+        // 2. Memproses file zip Word
+        const zip = new PizZip(content);
+        const doc = new window.docxtemplater(zip, {
+            paragraphLoop: true,
+            linebreaks: true,
+        });
+
+        // 3. Memetakan data dari input form web Anda
+        const contextData = {
+            lembaga: document.getElementById('in_lembaga').value,
+            nomor: document.getElementById('in_nomor').value,
+            nip_utama: document.getElementById('in_nip_utama').value,
+            pangkat_utama: document.getElementById('in_pangkat_utama').value,
+            jabatan_utama: document.getElementById('in_jabatan_utama').value,
+            biaya_utama: document.getElementById('in_biaya_utama').value,
+            maksud: document.getElementById('in_maksud').value,
+            angkutan: document.getElementById('in_angkutan').value,
+            asal: document.getElementById('in_asal').value,
+            tujuan: document.getElementById('in_tujuan').value,
+            lama: document.getElementById('in_lama').value,
+            tgl_berangkat: document.getElementById('in_tgl_berangkat').value,
+            tgl_kembali: document.getElementById('in_tgl_kembali').value,
+            dipa: document.getElementById('in_dipa').value,
+            akun: document.getElementById('in_akun').value,
+            ppk_nama: document.getElementById('in_ppk_nama').value,
+            ppk_nip: document.getElementById('in_ppk_nip').value,
+            tgl_ttd: document.getElementById('in_tgl_ttd').value,
+            // Memetakan manifes pengikut
+            pengikut: daftarPengikut.map((p, index) => ({
+                no: index + 1,
+                nama: p.nama || '-',
+                jabatan: p.jabatan || '-',
+                ket: p.ket || ''
+            }))
+        };
+
+        try {
+            // 4. Menyuntikkan data secara presisi ke template Word
+            doc.render(contextData);
             
-            // Ubah menjadi Blob ber-MIME type MS Word
-            const blob = new Blob(['\xEF\xBB\xBF' + fullHtml], {
-                type: 'application/msword;charset=utf-8'
+            // 5. Membuat file blob .docx baru
+            const out = doc.getZip().generate({
+                type: "blob",
+                mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             });
-            
-            // Picu trigger unduhan otomatis browser
-            const url = URL.createObjectURL(blob);
+
+            // 6. Memicu unduhan otomatis berkas .docx murni
+            const url = URL.createObjectURL(out);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `SPPD_${nomor}.doc`;
+            a.download = `SPPD_${nomor}.docx`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
+            
+        } catch (err) {
+            console.error("Terjadi error saat merender dokumen Word:", err);
+            alert("Terjadi kesalahan teknis pada konversi data templat.");
         }
+    });
+}
+            
         // Fungsi untuk menyimpan data form ke LocalStorage
 function saveToLocalStorage() {
     const formData = {
