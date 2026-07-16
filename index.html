@@ -75,8 +75,11 @@
                 </div>
             </div>
             <div class="flex space-x-2">
-                <button onclick="window.print()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-4 py-2 rounded shadow transition text-sm flex items-center space-x-1">
-                    <span>🖨️</span> <span>Cetak / Unduh PDF</span>
+                <button onclick="window.print()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-4 py-2 rounded shadow transition text-sm flex items-center space-x-1 cursor-pointer">
+                    <span>🖨️</span> <span>Cetak / PDF</span>
+                </button>
+                <button onclick="downloadWord()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded shadow transition text-sm flex items-center space-x-1 cursor-pointer">
+                    <span>📝</span> <span>Unduh Word (.doc)</span>
                 </button>
             </div>
         </div>
@@ -167,7 +170,7 @@
                 <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-2">
                     <div class="flex justify-between items-center">
                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Daftar Pengikut (Poin 8)</label>
-                        <button type="button" onclick="addPengikutRow()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-2 py-1 rounded shadow transition">+ Tambah</button>
+                        <button type="button" onclick="addPengikutRow()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-2 py-1 rounded shadow transition cursor-pointer">+ Tambah</button>
                     </div>
                     <div id="pengikutInputsContainer" class="space-y-2">
                         <!-- Rows injected via JS -->
@@ -286,7 +289,6 @@
 
         // Fungsi Sinkronisasi Data Form ke Tampilan Preview & Print Engine
         function updateDocumentView() {
-            // Tangkap variabel data
             const lembaga = document.getElementById('in_lembaga').value;
             const nomor = document.getElementById('in_nomor').value;
             const nipUtama = document.getElementById('in_nip_utama').value;
@@ -306,18 +308,17 @@
             const ppkNip = document.getElementById('in_ppk_nip').value;
             const tglTtd = document.getElementById('in_tgl_ttd').value;
 
-            // Generate HTML untuk Sub-Tabel Pengikut
             let pengikutRowsHtml = '';
             if (daftarPengikut.length === 0) {
-                pengikutRowsHtml = `<tr><td colspan="4" class="text-center italic text-slate-400 py-2">Tidak ada pengikut</td></tr>`;
+                pengikutRowsHtml = `<tr><td colspan="4" class="text-center italic py-2">Tidak ada pengikut</td></tr>`;
             } else {
                 daftarPengikut.forEach((p, i) => {
                     pengikutRowsHtml += `
                         <tr>
-                            <td style="text-align: center; width: 5%;">${i + 1}.</td>
-                            <td style="width: 45%; font-weight: bold;">${p.nama || '-'}</td>
-                            <td style="width: 30%;">${p.jabatan || '-'}</td>
-                            <td style="width: 20%;">${p.ket || ''}</td>
+                            <td style="text-align: center; width: 5%; border: 1px solid #000;">${i + 1}.</td>
+                            <td style="width: 45%; font-weight: bold; border: 1px solid #000;">${p.nama || '-'}</td>
+                            <td style="width: 30%; border: 1px solid #000;">${p.jabatan || '-'}</td>
+                            <td style="width: 20%; border: 1px solid #000;">${p.ket || ''}</td>
                         </tr>
                     `;
                 });
@@ -325,7 +326,7 @@
 
             // STRUKTUR HALAMAN 1 (BAGIAN MUKA)
             const page1Html = `
-                <div class="w-full flex justify-between items-start border-bottom pb-2 mb-4" style="border-bottom: 2px solid #000000;">
+                <div class="w-full flex justify-between items-start border-bottom pb-2 mb-4" style="border-bottom: 2px solid #000000; display: flex; justify-content: space-between;">
                     <div>
                         <div style="font-weight: bold; font-size: 10pt; text-transform: uppercase;">KEMENTERIAN / LEMBAGA</div>
                         <div style="font-weight: bold; font-size: 11pt; letter-spacing: 0.5px;">${lembaga}</div>
@@ -393,13 +394,13 @@
                     </tr>
                 </table>
 
-                <table class="spd-border-table" style="margin-bottom: 20px;">
+                <table class="spd-border-table" style="margin-bottom: 20px; width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr style="background-color: #f2f2f2;">
-                            <th>No.</th>
-                            <th>Nama</th>
-                            <th>Jabatan</th>
-                            <th>Keterangan</th>
+                            <th style="border: 1px solid #000; padding: 5px;">No.</th>
+                            <th style="border: 1px solid #000; padding: 5px;">Nama</th>
+                            <th style="border: 1px solid #000; padding: 5px;">Jabatan</th>
+                            <th style="border: 1px solid #000; padding: 5px;">Keterangan</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -422,16 +423,15 @@
                     </tr>
                 </table>
 
-                <!-- Autentikasi Halaman Depan -->
-                <div class="w-full flex justify-end text-sm" style="margin-top: 15px;">
+                <div class="w-full flex justify-end text-sm" style="margin-top: 15px; display: flex; justify-content: flex-end;">
                     <div style="width: 260px; position: relative;">
                         <div>Dikeluarkan di : Ambon</div>
                         <div>Pada tanggal : ${tglTtd}</div>
-                        <div class="mt-2 font-bold text-xs" style="border-bottom: 1px solid transparent;">Pejabat Pembuat Komitmen</div>
-                        <div style="height: 55px; margin-top: 5px;" class="flex items-center justify-start text-emerald-700 font-mono text-[9pt] tracking-widest opacity-40 select-none">
-                            <span>[ TTD DIGITAL ]<br>#KEJAKSAANDIGITAL</span>
+                        <div class="mt-2 font-bold text-xs">Pejabat Pembuat Komitmen</div>
+                        <div style="height: 45px; margin-top: 5px; color: #047857; font-family: monospace; font-size: 9pt;" class="select-none">
+                            [ TTD DIGITAL ]<br>#KEJAKSAANDIGITAL
                         </div>
-                        <div class="font-bold text-sm border-b border-black pb-0.5" style="text-decoration: underline;">${ppkNama}</div>
+                        <div class="font-bold text-sm border-b border-black pb-0.5" style="text-decoration: underline; font-weight: bold;">${ppkNama}</div>
                         <div class="text-xs font-mono">NIP. ${ppkNip}</div>
                     </div>
                 </div>
@@ -439,10 +439,10 @@
 
             // STRUKTUR HALAMAN 2 (HALAMAN BELAKANG / VISUM)
             const page2Html = `
-                <div class="w-full grid grid-cols-2 gap-x-4 text-[9.5pt]" style="display: grid; grid-template-columns: 1fr 1fr;">
+                <div class="w-full grid grid-cols-2 gap-x-4 text-[9.5pt]" style="display: grid; grid-template-columns: 1fr 1fr; grid-gap: 15px;">
                     <!-- KOLOM KIRI -->
                     <div class="space-y-4" style="border-right: 1px solid #000000; padding-right: 15px;">
-                        <div style="border: 1px solid #000; padding: 6px;">
+                        <div style="border: 1px solid #000; padding: 6px; margin-bottom: 15px;">
                             <table style="width:100%;">
                                 <tr><td style="width:30%;">Tiba di</td><td>: ${tujuan.split(' - ')[1] || tujuan}</td></tr>
                                 <tr><td>Pada Tanggal</td><td>: </td></tr>
@@ -466,13 +466,13 @@
 
                     <!-- KOLOM KANAN -->
                     <div class="space-y-4" style="padding-left: 5px;">
-                        <div style="border: 1px solid #000; padding: 6px; margin-bottom: 16px;">
+                        <div style="border: 1px solid #000; padding: 6px; margin-bottom: 15px;">
                             <table style="width:100%;">
                                 <tr><td style="width:35%;">Berangkat dari</td><td>: ${asal.split('/')[0]}</td></tr>
                                 <tr><td>Tempat Kedudukan</td><td>: Kejaksaan Tinggi Maluku</td></tr>
                                 <tr><td>Pada Tanggal</td><td>: ${tglBerangkat}</td></tr>
-                                <tr><td colspan="2" class="text-xs font-bold py-1">PEJABAT PEMBUAT KOMITMEN</td></tr>
-                                <tr><td colspan="2" style="height:25px; color: #15803d; font-family: monospace; font-size: 8pt; opacity: 0.5;">#KEJAKSAANDIGITAL</td></tr>
+                                <tr><td colspan="2" style="font-weight: bold; font-size: 8.5pt; padding: 2px 0;">PEJABAT PEMBUAT KOMITMEN</td></tr>
+                                <tr><td colspan="2" style="height:25px; color: #15803d; font-family: monospace; font-size: 8pt;">#KEJAKSAANDIGITAL</td></tr>
                                 <tr><td colspan="2" style="text-decoration: underline; font-weight: bold;">${ppkNama}</td></tr>
                                 <tr><td>NIP.</td><td>: ${ppkNip}</td></tr>
                             </table>
@@ -498,15 +498,15 @@
                             <td style="width:50%; vertical-align: top; border-right: 1px dashed #ccc; padding-right: 10px;">
                                 <strong>VI. Tiba di:</strong> Ambon (Tempat kedudukan)<br>
                                 Pada tanggal: ${tglKembali}<br><br>
-                                <span class="text-xs font-bold">PEJABAT PEMBUAT KOMITMEN</span><br>
-                                <div style="height:35px; color:#15803d; font-family:monospace; opacity:0.4;">#KEJAKSAANDIGITAL</div>
+                                <span style="font-weight: bold; font-size: 8.5pt;">PEJABAT PEMBUAT KOMITMEN</span><br>
+                                <div style="height:25px; color:#15803d; font-family:monospace;">#KEJAKSAANDIGITAL</div>
                                 <span style="text-decoration:underline; font-weight:bold;">${ppkNama}</span><br>
                                 NIP. ${ppkNip}
                             </td>
                             <td style="width:50%; vertical-align: top; padding-left: 10px;">
                                 Telah diperiksa dengan keterangan bahwa perjalanan tersebut atas perintahnya dan semata-mata untuk kepentingan jabatan dalam waktu yang sesingkat-singkatnya.<br><br>
-                                <span class="text-xs font-bold">PEJABAT PEMBUAT KOMITMEN</span><br>
-                                <div style="height:35px; color:#15803d; font-family:monospace; opacity:0.4;">#KEJAKSAANDIGITAL</div>
+                                <span style="font-weight: bold; font-size: 8.5pt;">PEJABAT PEMBUAT KOMITMEN</span><br>
+                                <div style="height:25px; color:#15803d; font-family:monospace;">#KEJAKSAANDIGITAL</div>
                                 <span style="text-decoration:underline; font-weight:bold;">${ppkNama}</span><br>
                                 NIP. ${ppkNip}
                             </td>
@@ -538,6 +538,49 @@
                     <div style="margin-top: 10mm;">${page2Html}</div>
                 </div>
             `;
+        }
+
+        // FUNGSI EKSPOR KE WORD (.DOC)
+        function downloadWord() {
+            const nomor = document.getElementById('in_nomor').value.replace(/[\/\*?:|"<>]/g, '-');
+            const page1 = document.getElementById('previewPage1').innerHTML;
+            const page2 = document.getElementById('previewPage2').innerHTML;
+            
+            // Satukan html dengan style dasar untuk MS Word interpreter
+            const fullHtml = `
+                <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+                <head>
+                    <title>SPPD Kejaksaan Digital</title>
+                    <style>
+                        body { font-family: 'Arial', sans-serif; font-size: 10pt; }
+                        table { width: 100%; border-collapse: collapse; }
+                        td { vertical-align: top; padding: 3px; }
+                        .page-break { page-break-before: always; break-before: page; }
+                    </style>
+                </head>
+                <body>
+                    ${page1}
+                    <br class="page-break" style="page-break-before: always; break-before: page;" />
+                    <div style="margin-top: 20px;"></div>
+                    ${page2}
+                </body>
+                </html>
+            `;
+            
+            // Ubah menjadi Blob ber-MIME type MS Word
+            const blob = new Blob(['\xEF\xBB\xBF' + fullHtml], {
+                type: 'application/msword;charset=utf-8'
+            });
+            
+            // Picu trigger unduhan otomatis browser
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `SPPD_${nomor}.doc`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
     </script>
 </body>
