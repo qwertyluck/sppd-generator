@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generator SPPD - Kejaksaan</title>
+    <title>Generator SPPD - Kejaksaan Digital</title>
     
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.tailwindcss.com https://unpkg.com;">
 
@@ -28,46 +28,61 @@
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; padding-bottom: 70px; }
+        
+        /* UI DARK MODE PERMANEN */
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #e2e8f0; padding-bottom: 70px; }
         
         ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
 
         @media print { 
             .no-print { display: none !important; } 
-            body { background: #e2e8f0; padding-bottom: 0; }
+            body { background: #ffffff; color: #000; padding-bottom: 0; }
             .print-area { box-shadow: none !important; border: none !important; margin-bottom: 0 !important; }
             .page-break { page-break-before: always; }
         }
 
-        .spd-document { font-family: 'Arial', sans-serif; color: #000; line-height: 1.4; font-size: 9.5pt; }
-        .input-modern { @apply w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:bg-white focus:border-kejaksaan-500 focus:ring-2 focus:ring-kejaksaan-100 transition-all outline-none text-slate-800; }
-        .label-modern { @apply block text-[11px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider; }
-        .card-modern { @apply bg-white p-6 rounded-2xl border border-slate-100 shadow-sm mb-6; }
+        /* Dokumen Preview HARUS tetap putih dengan teks hitam */
+        .spd-document { font-family: 'Arial', sans-serif; color: #000; background-color: #ffffff; line-height: 1.4; font-size: 9.5pt; }
+        
+        /* Form Outline - Diperbesar, Elegan, dan Nyaman */
+        .input-modern { 
+            @apply w-full bg-[#1e293b] border border-slate-600 rounded-lg px-4 py-3 text-sm focus:bg-[#0f172a] focus:border-kejaksaan-500 focus:ring-2 focus:ring-kejaksaan-500/50 transition-all outline-none text-slate-100 placeholder-slate-500 shadow-inner; 
+        }
+        
+        /* Label Form - Jelas di Atas Input */
+        .label-modern { 
+            @apply block text-[12px] font-bold text-slate-400 mb-2 uppercase tracking-wider; 
+        }
+        
+        /* Card Container - Mode Gelap */
+        .card-modern { 
+            @apply bg-[#1e293b] p-6 rounded-2xl border border-slate-700 shadow-xl mb-6 relative overflow-hidden; 
+        }
     </style>
 </head>
-<body class="text-slate-800 antialiased selection:bg-kejaksaan-500 selection:text-white">
+<body class="antialiased selection:bg-kejaksaan-500 selection:text-white">
 
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm no-print">
-        <div class="container mx-auto px-4 md:px-8 h-16 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="bg-gradient-to-br from-kejaksaan-500 to-kejaksaan-700 p-2 rounded-xl text-white shadow-md">
+    <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-50 shadow-md no-print">
+        <div class="container mx-auto px-4 md:px-8 h-20 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <div class="bg-gradient-to-br from-kejaksaan-500 to-kejaksaan-700 p-2.5 rounded-xl text-white shadow-lg shadow-kejaksaan-900/50">
                     <i class="ph-bold ph-scales text-2xl"></i>
                 </div>
                 <div>
-                    <h1 class="font-bold text-slate-800 text-lg leading-tight tracking-tight">SPPD GENERATOR KEJAKSAAN</h1>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sistem Penerbitan Surat Perintah Perjalanan Dinas Otomatis</p>
+                    <h1 class="font-bold text-white text-xl leading-tight tracking-tight">SPPD GENERATOR KEJAKSAAN</h1>
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Sistem Penerbitan Surat Otomatis</p>
                 </div>
             </div>
-            <div class="flex items-center gap-2">
-                <label for="templateUpload" class="cursor-pointer flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors border border-slate-300 shadow-sm" title="Gunakan ini jika unduh Word otomatis gagal">
-                    <i class="ph-bold ph-upload-simple text-lg text-slate-500"></i> Manual Upload Template
+            <div class="flex items-center gap-3">
+                <label for="templateUpload" class="cursor-pointer flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-slate-200 px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors border border-slate-600 shadow-sm" title="Gunakan ini jika unduh Word otomatis gagal">
+                    <i class="ph-bold ph-upload-simple text-lg text-slate-300"></i> Manual Upload
                 </label>
                 <input type="file" id="templateUpload" accept=".docx" class="hidden" onchange="generateFromLocalTemplate(this)" />
 
-                <button onclick="downloadWord()" id="btnDownload" class="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-blue-500/30 transition-transform transform hover:-translate-y-0.5">
+                <button onclick="downloadWord()" id="btnDownload" class="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-blue-900/50 transition-all transform hover:-translate-y-0.5">
                     <i class="ph-bold ph-file-doc text-lg"></i> Unduh Word
                 </button>
             </div>
@@ -78,139 +93,139 @@
         
         <section class="w-full lg:w-1/2 xl:w-5/12 flex flex-col">
             <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl font-bold text-slate-700 flex items-center gap-2">
+                <h2 class="text-xl font-bold text-slate-200 flex items-center gap-2">
                     <i class="ph-fill ph-keyboard text-kejaksaan-500"></i> Formulir Data
                 </h2>
-                <div class="text-[11px] flex items-center gap-1.5 font-bold bg-green-50 text-green-700 px-3 py-1.5 rounded-full border border-green-100">
-                    <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div> Autosave Aktif
+                <div class="text-[11px] flex items-center gap-1.5 font-bold bg-green-900/30 text-green-400 px-3 py-1.5 rounded-full border border-green-800/50">
+                    <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_#22c55e]"></div> Autosave Aktif
                 </div>
             </div>
             
             <form id="sppdForm" class="space-y-6">
                 
-                <div class="card-modern relative overflow-hidden">
+                <div class="card-modern">
                     <div class="absolute top-0 left-0 w-1.5 h-full bg-kejaksaan-500"></div>
-                    <h3 class="flex items-center gap-2 text-sm font-bold text-slate-800 mb-5 pb-3 border-b border-slate-100">
+                    <h3 class="flex items-center gap-2 text-sm font-bold text-slate-200 mb-5 pb-3 border-b border-slate-700">
                         <i class="ph-fill ph-identification-card text-kejaksaan-500 text-lg"></i> Identitas Surat
                     </h3>
                     <div class="space-y-5">
                         <div>
                             <label for="in_satuan_kerja" class="label-modern">Satuan Kerja</label>
-                            <input type="text" id="in_satuan_kerja" value="Kejaksaan Tinggi Maluku" class="input-modern uppercase font-bold">
+                            <input type="text" id="in_satuan_kerja" value="Kejaksaan Tinggi Maluku" class="input-modern uppercase font-bold text-white">
                         </div>
                         <div>
                             <label for="in_nomor" class="label-modern">Nomor SPPD</label>
-                            <input type="text" id="in_nomor" value="SPPD-024/PPK/01/2026" class="input-modern font-mono text-kejaksaan-700 font-bold bg-kejaksaan-50 border-kejaksaan-200">
+                            <input type="text" id="in_nomor" value="SPPD-024/PPK/01/2026" class="input-modern font-mono text-green-400 font-bold border-slate-600">
                         </div>
                     </div>
                 </div>
 
-                <div class="card-modern relative overflow-hidden">
+                <div class="card-modern">
                     <div class="absolute top-0 left-0 w-1.5 h-full bg-blue-500"></div>
-                    <h3 class="flex items-center gap-2 text-sm font-bold text-slate-800 mb-5 pb-3 border-b border-slate-100">
+                    <h3 class="flex items-center gap-2 text-sm font-bold text-slate-200 mb-5 pb-3 border-b border-slate-700">
                         <i class="ph-fill ph-user-circle text-blue-500 text-lg"></i> Pelaksana Utama
                     </h3>
                     <div class="space-y-5">
                         <div>
                             <label for="in_nama_pegawai" class="label-modern">Nama Pegawai</label>
-                            <input type="text" id="in_nama_pegawai" class="input-modern uppercase font-bold">
+                            <input type="text" id="in_nama_pegawai" class="input-modern uppercase font-bold text-white">
                         </div>
-                        <div class="grid grid-cols-2 gap-5">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             <div>
                                 <label for="in_nip_utama" class="label-modern">NIP (18 Digit)</label>
                                 <input type="text" id="in_nip_utama" class="input-modern font-mono" maxlength="18">
-                                <p id="warn_nip_utama" class="text-[10px] text-red-500 font-bold hidden mt-1"><i class="ph-bold ph-warning"></i> NIP harus 18 digit!</p>
+                                <p id="warn_nip_utama" class="text-[10px] text-red-400 font-bold hidden mt-1.5"><i class="ph-bold ph-warning"></i> NIP harus 18 digit!</p>
                             </div>
                             <div>
                                 <label for="in_pangkat_utama" class="label-modern">Pangkat/Golongan</label>
                                 <input type="text" id="in_pangkat_utama" class="input-modern">
                             </div>
                         </div>
-                        <div class="grid grid-cols-3 gap-5">
-                            <div class="col-span-2">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                            <div class="md:col-span-2">
                                 <label for="in_jabatan_utama" class="label-modern">Jabatan Pegawai</label>
                                 <input type="text" id="in_jabatan_utama" class="input-modern uppercase">
                             </div>
                             <div>
-    <label for="in_biaya_utama" class="label-modern">Tgkt. Biaya</label>
-    <select id="in_biaya_utama" class="form-outline cursor-pointer font-bold text-slate-800">
-        <option value="A">Tingkat A - Pejabat Negara (Ketua/Wakil/Anggota Lembaga Tinggi Negara, Menteri/setingkat)</option>
-        <option value="B">Tingkat B - Pejabat Negara Lainnya dan Pejabat Eselon I</option>
-        <option value="C" selected>Tingkat C - Pejabat Eselon II</option>
-        <option value="D">Tingkat D - Pejabat Eselon III dan PNS Golongan IV</option>
-        <option value="E">Tingkat E - Pejabat Eselon IV dan PNS Golongan III</option>
-        <option value="F">Tingkat F - PNS Golongan II dan Golongan I</option>
-    </select>
-</div>
+                                <label for="in_biaya_utama" class="label-modern">Tgkt. Biaya</label>
+                                <select id="in_biaya_utama" class="input-modern cursor-pointer font-bold">
+                                    <option value="A">Tingkat A - Pejabat Negara</option>
+                                    <option value="B">Tingkat B - Eselon I</option>
+                                    <option value="C" selected>Tingkat C - Eselon II</option>
+                                    <option value="D">Tingkat D - Eselon III / Gol. IV</option>
+                                    <option value="E">Tingkat E - Eselon IV / Gol. III</option>
+                                    <option value="F">Tingkat F - Gol. II / I</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="card-modern border-amber-100 shadow-md relative overflow-hidden">
+                <div class="card-modern shadow-lg shadow-amber-900/10">
                     <div class="absolute top-0 left-0 w-1.5 h-full bg-amber-500"></div>
-                    <h3 class="flex items-center gap-2 text-sm font-bold text-slate-800 mb-5 pb-3 border-b border-slate-100">
+                    <h3 class="flex items-center gap-2 text-sm font-bold text-slate-200 mb-5 pb-3 border-b border-slate-700">
                         <i class="ph-fill ph-map-pin text-amber-500 text-lg"></i> Rincian Penugasan
                     </h3>
-                    <div class="space-y-5">
+                    <div class="space-y-6">
                         <div>
                             <label for="in_maksud" class="label-modern">Maksud Perjalanan</label>
-                            <textarea id="in_maksud" rows="2" class="input-modern resize-none leading-relaxed"></textarea>
+                            <textarea id="in_maksud" rows="4" class="input-modern resize-y leading-relaxed"></textarea>
                         </div>
                         <div>
                             <label for="in_angkutan" class="label-modern">Alat Angkutan</label>
                             <input type="text" id="in_angkutan" class="input-modern">
                         </div>
-                        <div class="grid grid-cols-2 gap-5">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             <div>
                                 <label for="in_asal" class="label-modern">Tempat Asal</label>
                                 <input type="text" id="in_asal" class="input-modern">
                             </div>
                             <div>
                                 <label for="in_tujuan" class="label-modern">Tempat Tujuan</label>
-                                <input type="text" id="in_tujuan" class="input-modern font-bold">
+                                <input type="text" id="in_tujuan" class="input-modern font-bold text-white">
                             </div>
                         </div>
                         
-                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 grid grid-cols-1 md:grid-cols-2 gap-5 shadow-inner">
                             <div>
-                                <label for="in_tgl_berangkat" class="label-modern text-kejaksaan-700">Tgl Berangkat</label>
+                                <label for="in_tgl_berangkat" class="label-modern text-kejaksaan-500">Tgl Berangkat</label>
                                 <input type="date" id="in_tgl_berangkat" class="input-modern font-mono">
                             </div>
                             <div>
-                                <label for="in_tgl_kembali" class="label-modern text-kejaksaan-700">Tgl Kembali</label>
+                                <label for="in_tgl_kembali" class="label-modern text-kejaksaan-500">Tgl Kembali</label>
                                 <input type="date" id="in_tgl_kembali" class="input-modern font-mono">
                             </div>
                             <div class="md:col-span-2">
-                                <label for="in_lama" class="label-modern text-amber-600 flex justify-between">
+                                <label for="in_lama" class="label-modern text-amber-500 flex justify-between">
                                     <span>Lama Perjalanan</span>
-                                    <span class="text-[9px] lowercase italic font-normal">*terhitung otomatis</span>
+                                    <span class="text-[10px] lowercase italic font-normal text-slate-500">*terhitung otomatis</span>
                                 </label>
-                                <input type="text" id="in_lama" placeholder="Pilih tanggal di atas..." class="input-modern bg-amber-50 border-amber-200 text-amber-900 font-bold" readonly>
+                                <input type="text" id="in_lama" placeholder="Pilih tanggal di atas..." class="input-modern bg-slate-900/50 border-amber-900/50 text-amber-400 font-bold" readonly>
                             </div>
                         </div>
-                        <p id="warn_date" class="text-[11px] text-red-600 font-bold hidden bg-red-50 p-3 rounded-lg border border-red-100">
+                        <p id="warn_date" class="text-[11px] text-red-400 font-bold hidden bg-red-900/20 p-3 rounded-lg border border-red-800/50">
                             <i class="ph-bold ph-warning text-lg inline-block align-middle mr-1"></i> Tanggal kembali tidak valid!
                         </p>
                     </div>
                 </div>
 
-                <div class="card-modern relative overflow-hidden">
+                <div class="card-modern">
                     <div class="absolute top-0 left-0 w-1.5 h-full bg-purple-500"></div>
-                    <div class="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
-                        <h3 class="flex items-center gap-2 text-sm font-bold text-slate-800">
+                    <div class="flex justify-between items-center mb-5 pb-3 border-b border-slate-700">
+                        <h3 class="flex items-center gap-2 text-sm font-bold text-slate-200">
                             <i class="ph-fill ph-users text-purple-500 text-lg"></i> Pengikut
                         </h3>
-                        <button type="button" onclick="addPengikutRow()" class="flex items-center gap-1.5 bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100 hover:border-purple-300 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm">
+                        <button type="button" onclick="addPengikutRow()" class="flex items-center gap-1.5 bg-purple-900/40 text-purple-400 border border-purple-700 hover:bg-purple-800 hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm">
                             <i class="ph-bold ph-plus"></i> Tambah
                         </button>
                     </div>
                     <div id="pengikutContainer" class="space-y-4"></div>
                 </div>
 
-                <div class="card-modern relative overflow-hidden mb-10">
-                    <div class="absolute top-0 left-0 w-1.5 h-full bg-slate-700"></div>
-                    <h3 class="flex items-center gap-2 text-sm font-bold text-slate-800 mb-5 pb-3 border-b border-slate-100">
-                        <i class="ph-fill ph-signature text-slate-700 text-lg"></i> Anggaran & Otorisasi
+                <div class="card-modern mb-10">
+                    <div class="absolute top-0 left-0 w-1.5 h-full bg-slate-500"></div>
+                    <h3 class="flex items-center gap-2 text-sm font-bold text-slate-200 mb-5 pb-3 border-b border-slate-700">
+                        <i class="ph-fill ph-signature text-slate-400 text-lg"></i> Anggaran & Otorisasi
                     </h3>
                     <div class="space-y-5">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -219,17 +234,17 @@
                                 <input type="text" id="in_dipa" class="input-modern">
                             </div>
                             <div>
-                                <label for="in_akun" class="label-modern">Akun</label>
-                                <select id="in_akun" class="form-outline text-xs">
-                                    <option value="524113">524113 (P.D. Dalam Kota/Biasa)</option>
-                                    <option value="524114">524114 (P.D. Dalam Kota)</option>
+                                <label for="in_akun" class="label-modern">Akun Belanja</label>
+                                <select id="in_akun" class="input-modern text-xs cursor-pointer">
+                                    <option value="524113">524113 (Dalam Kota/Biasa)</option>
+                                    <option value="524114">524114 (Dalam Kota)</option>
                                 </select>
                             </div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
                                 <label for="in_ppk_nama" class="label-modern">Nama PPK</label>
-                                <input type="text" id="in_ppk_nama" class="input-modern uppercase font-bold">
+                                <input type="text" id="in_ppk_nama" class="input-modern uppercase font-bold text-white">
                             </div>
                             <div>
                                 <label for="in_ppk_nip" class="label-modern">NIP PPK</label>
@@ -252,32 +267,32 @@
         </section>
 
         <section class="w-full lg:w-1/2 xl:w-7/12 relative">
-            <div class="lg:sticky lg:top-24 bg-slate-200 rounded-3xl p-4 md:p-6 shadow-inner border border-slate-300">
-                <div class="flex items-center justify-between mb-4 text-slate-500">
+            <div class="lg:sticky lg:top-28 bg-slate-800 rounded-3xl p-5 md:p-8 shadow-2xl border border-slate-700">
+                <div class="flex items-center justify-between mb-5 text-slate-400">
                     <h2 class="text-sm font-bold flex items-center gap-2">
-                        <i class="ph-fill ph-eye text-xl"></i> Pratinjau Dokumen (A4)
+                        <i class="ph-fill ph-eye text-xl text-slate-300"></i> Pratinjau Dokumen Cetak (A4)
                     </h2>
-                    <div class="text-xs font-semibold bg-white px-3 py-1 rounded-full shadow-sm text-slate-600">
-                        2 Halaman
+                    <div class="text-xs font-semibold bg-slate-900 border border-slate-700 px-3 py-1.5 rounded-full text-slate-400">
+                        2 Halaman Putih
                     </div>
                 </div>
                 
-                <div class="overflow-y-auto max-h-[75vh] flex flex-col items-center gap-6 pb-4 custom-scrollbar rounded-xl">
-                    <div id="previewPage1" class="bg-white p-[15mm] w-full max-w-[210mm] min-h-[297mm] shadow-xl spd-document print-area"></div>
-                    <div id="previewPage2" class="bg-white p-[15mm] w-full max-w-[210mm] min-h-[297mm] shadow-xl spd-document print-area page-break"></div>
+                <div class="overflow-y-auto max-h-[75vh] flex flex-col items-center gap-8 pb-4 custom-scrollbar rounded-xl">
+                    <div id="previewPage1" class="p-[15mm] w-full max-w-[210mm] min-h-[297mm] shadow-2xl spd-document print-area rounded-sm"></div>
+                    <div id="previewPage2" class="p-[15mm] w-full max-w-[210mm] min-h-[297mm] shadow-2xl spd-document print-area page-break rounded-sm"></div>
                 </div>
             </div>
         </section>
         
     </main>
 
-    <footer class="fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 py-3 text-center text-xs font-medium text-slate-500 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-50">
-        © 2026 Kejaksaan Digital | Dibuat oleh <strong class="text-slate-800 font-bold">Jalo Tuharea</strong>
+    <footer class="fixed bottom-0 left-0 w-full bg-slate-900 border-t border-slate-800 py-3 text-center text-xs font-medium text-slate-500 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.3)] z-50">
+        © 2026 Kejaksaan Digital | Dibuat oleh <strong class="text-slate-300 font-bold">Jalo Tuharea</strong>
     </footer>
 
 <script>
     // ==========================================
-    // BAGIAN LOGIKA JAVASCRIPT UTUH & LENGKAP
+    // BAGIAN LOGIKA JAVASCRIPT 100% UTUH
     // ==========================================
     let daftarPengikut = [];
 
@@ -371,20 +386,33 @@
         saveData(); updatePreview();
     }
 
+    // UPDATE UI PENGIKUT MENGGUNAKAN DARK MODE & SPACING YANG SESUAI
     function renderPengikut() {
         const container = document.getElementById('pengikutContainer');
         container.innerHTML = '';
         daftarPengikut.forEach((p, i) => {
             container.innerHTML += `
-                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm relative group hover:border-purple-300 transition-colors">
-                    <button type="button" onclick="removePengikutRow(${i})" class="absolute -top-3 -right-3 bg-red-100 text-red-600 hover:bg-red-500 hover:text-white transition-colors rounded-full p-2 shadow-md">
+                <div class="bg-slate-700/30 border border-slate-600 p-5 rounded-xl shadow-sm relative group hover:border-purple-500/50 transition-colors">
+                    <button type="button" onclick="removePengikutRow(${i})" class="absolute -top-3 -right-3 bg-slate-800 text-red-500 hover:bg-red-500 hover:text-white transition-colors border border-slate-600 rounded-full p-2 shadow-md z-10">
                         <i class="ph-bold ph-trash"></i>
                     </button>
-                    <p class="text-[10px] font-bold text-purple-400 mb-3 uppercase tracking-wider">Pengikut ${i+1}</p>
-                    <input type="text" placeholder="Nama Lengkap & Gelar" value="${p.nama}" oninput="updatePengikutField(${i}, 'nama', this.value)" class="input-modern mb-3 font-bold uppercase border-slate-200">
-                    <div class="grid grid-cols-2 gap-3">
-                        <input type="text" placeholder="Jabatan" value="${p.jabatan}" oninput="updatePengikutField(${i}, 'jabatan', this.value)" class="input-modern uppercase text-xs">
-                        <input type="text" placeholder="Keterangan" value="${p.ket}" oninput="updatePengikutField(${i}, 'ket', this.value)" class="input-modern text-xs">
+                    <p class="text-[10px] font-bold text-purple-400 mb-4 uppercase tracking-wider">Pengikut ${i+1}</p>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="label-modern text-slate-300">Nama Lengkap & Gelar</label>
+                            <input type="text" value="${p.nama}" oninput="updatePengikutField(${i}, 'nama', this.value)" class="input-modern font-bold uppercase">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="label-modern text-slate-300">Jabatan</label>
+                                <input type="text" value="${p.jabatan}" oninput="updatePengikutField(${i}, 'jabatan', this.value)" class="input-modern uppercase">
+                            </div>
+                            <div>
+                                <label class="label-modern text-slate-300">Keterangan</label>
+                                <input type="text" value="${p.ket}" oninput="updatePengikutField(${i}, 'ket', this.value)" class="input-modern">
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;
@@ -393,7 +421,7 @@
 
     function saveData() {
         const data = {};
-        document.querySelectorAll('#sppdForm input, #sppdForm textarea').forEach(el => {
+        document.querySelectorAll('#sppdForm input, #sppdForm textarea, #sppdForm select').forEach(el => {
             if(el.id) data[el.id] = el.value;
         });
         data['pengikut'] = daftarPengikut;
@@ -421,9 +449,6 @@
         return el ? el.value : '';
     }
 
-    // ==========================================
-    // RENDER LIVE PREVIEW 2 HALAMAN (UTUH)
-    // ==========================================
     function updatePreview() {
         try {
             const preview1 = document.getElementById('previewPage1');
@@ -432,15 +457,15 @@
 
             let rowHtml = '';
             if (daftarPengikut.length === 0) {
-                rowHtml = `<tr><td colspan=\"4\" class=\"border border-black p-2 text-center italic text-xs\">Tidak ada pengikut</td></tr>`;
+                rowHtml = `<tr><td colspan="4" class="border border-black p-2 text-center italic text-xs">Tidak ada pengikut</td></tr>`;
             } else {
                 daftarPengikut.forEach((p, i) => {
                     rowHtml += `
                         <tr>
-                            <td class=\"border border-black p-1.5 text-center\">${i+1}.</td>
-                            <td class=\"border border-black p-1.5 font-bold uppercase\">${p.nama || '-'}</td>
-                            <td class=\"border border-black p-1.5 uppercase\">${p.jabatan || '-'}</td>
-                            <td class=\"border border-black p-1.5\">${p.ket || '-'}</td>
+                            <td class="border border-black p-1.5 text-center">${i+1}.</td>
+                            <td class="border border-black p-1.5 font-bold uppercase">${p.nama || '-'}</td>
+                            <td class="border border-black p-1.5 uppercase">${p.jabatan || '-'}</td>
+                            <td class="border border-black p-1.5">${p.ket || '-'}</td>
                         </tr>
                     `;
                 });
@@ -453,122 +478,122 @@
             const asal = getVal('in_asal');
 
             preview1.innerHTML = `
-                <div class=\"flex justify-between items-start border-b-[2px] border-black pb-2 mb-5\">
+                <div class="flex justify-between items-start border-b-[2px] border-black pb-2 mb-5">
                     <div>
-                        <div class=\"font-bold text-xs uppercase\">Kementerian / Lembaga</div>
-                        <div class=\"font-bold text-sm tracking-wide uppercase\">${getVal('in_satuan_kerja')}</div>
-                        <div class=\"text-[7.5pt] text-gray-700 mt-1 max-w-[280px] leading-tight\">
+                        <div class="font-bold text-xs uppercase">Kementerian / Lembaga</div>
+                        <div class="font-bold text-sm tracking-wide uppercase">${getVal('in_satuan_kerja')}</div>
+                        <div class="text-[7.5pt] text-gray-700 mt-1 max-w-[280px] leading-tight">
                             LAMPIRAN I PERATURAN MENTERI KEUANGAN INDONESIA NOMOR: 113/PMK.05/2012 TENTANG PERJALANAN DINAS
                         </div>
                     </div>
-                    <div class=\"text-[8.5pt] font-mono border-l border-gray-300 pl-3\">
+                    <div class="text-[8.5pt] font-mono border-l border-gray-300 pl-3">
                         <div>LEMBARAN :</div>
                         <div>KODE &nbsp;&nbsp;&nbsp;:</div>
                         <div>NOMOR &nbsp;&nbsp;: ${getVal('in_nomor')}</div>
                     </div>
                 </div>
 
-                <div class=\"text-center font-bold text-lg mb-6\"><span class=\"border-b-[1.5px] border-black pb-0.5 tracking-wide\">SURAT PERJALANAN DINAS (SPD)</span></div>
+                <div class="text-center font-bold text-lg mb-6"><span class="border-b-[1.5px] border-black pb-0.5 tracking-wide">SURAT PERJALANAN DINAS (SPD)</span></div>
                 
-                <table class=\"w-full text-xs align-top mb-5\">
-                    <tr><td class=\"w-6 pb-2.5\">1.</td><td class=\"w-[45%] pb-2.5\">Pejabat Pembuat Komitmen</td><td class=\"w-3 pb-2.5\">:</td><td class=\"font-bold pb-2.5 uppercase\">${ppkNama}</td></tr>
-                    <tr class=\"border-t border-gray-200\"><td class=\"py-2.5\">2.</td><td class=\"py-2.5 pr-2\">Nama Pegawai yang melaksanakan</td><td class=\"py-2.5\">:</td><td class=\"font-bold py-2.5 uppercase\">${getVal('in_nama_pegawai')}<br>NIP. ${getVal('in_nip_utama')}</td></tr>
-                    <tr class=\"border-t border-gray-200\"><td class=\"py-2.5\">3.</td><td class=\"py-2.5\">a. Pangkat dan Golongan<br>b. Jabatan / Instansi<br>c. Tingkat Biaya</td><td class=\"py-2.5\">:<br>:<br>:</td><td class=\"py-2.5\">a. ${getVal('in_pangkat_utama')}<br>b. <span class=\"uppercase\">${getVal('in_jabatan_utama')}</span><br>c. ${getVal('in_biaya_utama')}</td></tr>
-                    <tr class=\"border-t border-gray-200\"><td class=\"py-2.5\">4.</td><td class=\"py-2.5\">Maksud Perjalanan</td><td class=\"py-2.5\">:</td><td class=\"py-2.5 leading-relaxed\">${getVal('in_maksud')}</td></tr>
-                    <tr class=\"border-t border-gray-200\"><td class=\"py-2.5\">5.</td><td class=\"py-2.5\">Alat Angkutan</td><td class=\"py-2.5\">:</td><td class=\"py-2.5\">${getVal('in_angkutan')}</td></tr>
-                    <tr class=\"border-t border-gray-200\"><td class=\"py-2.5\">6.</td><td class=\"py-2.5\">a. Tempat Berangkat<br>b. Tempat Tujuan</td><td class=\"py-2.5\">:<br>:</td><td class=\"py-2.5\">a. ${asal}<br>b. ${getVal('in_tujuan')}</td></tr>
-                    <tr class=\"border-t border-gray-200\"><td class=\"py-2.5\">7.</td><td class=\"py-2.5\">a. Lama Perjalanan<br>b. Tanggal Berangkat<br>c. Tanggal Kembali</td><td class=\"py-2.5\">:<br>:<br>:</td><td class=\"py-2.5\">a. ${getVal('in_lama')}<br>b. ${tglB}<br>c. ${tglK}</td></tr>
+                <table class="w-full text-xs align-top mb-5">
+                    <tr><td class="w-6 pb-2.5">1.</td><td class="w-[45%] pb-2.5">Pejabat Pembuat Komitmen</td><td class="w-3 pb-2.5">:</td><td class="font-bold pb-2.5 uppercase">${ppkNama}</td></tr>
+                    <tr class="border-t border-gray-200"><td class="py-2.5">2.</td><td class="py-2.5 pr-2">Nama Pegawai yang melaksanakan</td><td class="py-2.5">:</td><td class="font-bold py-2.5 uppercase">${getVal('in_nama_pegawai')}<br>NIP. ${getVal('in_nip_utama')}</td></tr>
+                    <tr class="border-t border-gray-200"><td class="py-2.5">3.</td><td class="py-2.5">a. Pangkat dan Golongan<br>b. Jabatan / Instansi<br>c. Tingkat Biaya</td><td class="py-2.5">:<br>:<br>:</td><td class="py-2.5">a. ${getVal('in_pangkat_utama')}<br>b. <span class="uppercase">${getVal('in_jabatan_utama')}</span><br>c. ${getVal('in_biaya_utama')}</td></tr>
+                    <tr class="border-t border-gray-200"><td class="py-2.5">4.</td><td class="py-2.5">Maksud Perjalanan</td><td class="py-2.5">:</td><td class="py-2.5 leading-relaxed">${getVal('in_maksud')}</td></tr>
+                    <tr class="border-t border-gray-200"><td class="py-2.5">5.</td><td class="py-2.5">Alat Angkutan</td><td class="py-2.5">:</td><td class="py-2.5">${getVal('in_angkutan')}</td></tr>
+                    <tr class="border-t border-gray-200"><td class="py-2.5">6.</td><td class="py-2.5">a. Tempat Berangkat<br>b. Tempat Tujuan</td><td class="py-2.5">:<br>:</td><td class="py-2.5">a. ${asal}<br>b. ${getVal('in_tujuan')}</td></tr>
+                    <tr class="border-t border-gray-200"><td class="py-2.5">7.</td><td class="py-2.5">a. Lama Perjalanan<br>b. Tanggal Berangkat<br>c. Tanggal Kembali</td><td class="py-2.5">:<br>:<br>:</td><td class="py-2.5">a. ${getVal('in_lama')}<br>b. ${tglB}<br>c. ${tglK}</td></tr>
                 </table>
                 
-                <div class=\"text-xs font-bold mb-1.5\">8. Pengikut:</div>
-                <table class=\"w-full text-xs border-collapse mb-5\">
-                    <tr class=\"bg-gray-100\">
-                        <th class=\"border border-black p-1.5 w-8\">No.</th>
-                        <th class=\"border border-black p-1.5\">Nama</th>
-                        <th class=\"border border-black p-1.5\">Jabatan</th>
-                        <th class=\"border border-black p-1.5\">Keterangan</th>
+                <div class="text-xs font-bold mb-1.5">8. Pengikut:</div>
+                <table class="w-full text-xs border-collapse mb-5">
+                    <tr class="bg-gray-100">
+                        <th class="border border-black p-1.5 w-8">No.</th>
+                        <th class="border border-black p-1.5">Nama</th>
+                        <th class="border border-black p-1.5">Jabatan</th>
+                        <th class="border border-black p-1.5">Keterangan</th>
                     </tr>
                     ${rowHtml}
                 </table>
 
-                <table class=\"w-full text-xs align-top mb-8\">
-                    <tr class=\"border-t border-gray-200\"><td class=\"w-6 py-2\">9.</td><td class=\"w-[45%] py-2\">Pembebanan Anggaran<br>&nbsp;&nbsp;&nbsp;a. Instansi<br>&nbsp;&nbsp;&nbsp;b. Akun</td><td class=\"w-3 py-2\"><br>:<br>:</td><td class=\"py-2\"><br>a. ${getVal('in_dipa')}<br>b. ${getVal('in_akun')}</td></tr>
+                <table class="w-full text-xs align-top mb-8">
+                    <tr class="border-t border-gray-200"><td class="w-6 py-2">9.</td><td class="w-[45%] py-2">Pembebanan Anggaran<br>&nbsp;&nbsp;&nbsp;a. Instansi<br>&nbsp;&nbsp;&nbsp;b. Akun</td><td class="w-3 py-2"><br>:<br>:</td><td class="py-2"><br>a. ${getVal('in_dipa')}<br>b. ${getVal('in_akun')}</td></tr>
                 </table>
 
-                <div class=\"flex justify-end text-xs\">
-                    <div class=\"w-60 text-left\">
+                <div class="flex justify-end text-xs">
+                    <div class="w-60 text-left">
                         <p>${getVal('in_lokasi_asal')}, ${formatTanggalIndo(getVal('in_tgl_ttd'))}</p>
-                        <p class=\"font-bold mb-14\">Pejabat Pembuat Komitmen</p>
-                        <p class=\"font-bold underline uppercase tracking-wide\">${ppkNama}</p>
+                        <p class="font-bold mb-14">Pejabat Pembuat Komitmen</p>
+                        <p class="font-bold underline uppercase tracking-wide">${ppkNama}</p>
                         <p>NIP. ${ppkNip}</p>
                     </div>
                 </div>
             `;
 
             preview2.innerHTML = `
-                <div class=\"grid grid-cols-2 gap-4 text-xs\">
-                    <div class=\"border-r border-black pr-4\"></div>
-                    <div class=\"pl-2 mb-6\">
-                        <table class=\"w-full\">
-                            <tr><td class=\"w-24\">I. Berangkat dari</td><td>: ${asal}</td></tr>
+                <div class="grid grid-cols-2 gap-4 text-xs">
+                    <div class="border-r border-black pr-4"></div>
+                    <div class="pl-2 mb-6">
+                        <table class="w-full">
+                            <tr><td class="w-24">I. Berangkat dari</td><td>: ${asal}</td></tr>
                             <tr><td>(Tempat kedudukan)</td><td></td></tr>
                             <tr><td>Pada Tanggal</td><td>: ${tglB}</td></tr>
-                            <tr><td colspan=\"2\" class=\"pt-2 font-bold uppercase\">PEJABAT PEMBUAT KOMITMEN</td></tr>
-                            <tr><td colspan=\"2\" class=\"h-16 text-green-700 font-mono text-[9px] align-middle\">#KEJAKSAANDIGITAL</td></tr>
-                            <tr><td colspan=\"2\" class=\"font-bold underline uppercase\">${ppkNama}</td></tr>
-                            <tr><td colspan=\"2\">NIP. ${ppkNip}</td></tr>
+                            <tr><td colspan="2" class="pt-2 font-bold uppercase">PEJABAT PEMBUAT KOMITMEN</td></tr>
+                            <tr><td colspan="2" class="h-16 text-green-700 font-mono text-[9px] align-middle">#KEJAKSAANDIGITAL</td></tr>
+                            <tr><td colspan="2" class="font-bold underline uppercase">${ppkNama}</td></tr>
+                            <tr><td colspan="2">NIP. ${ppkNip}</td></tr>
                         </table>
                     </div>
                 </div>
 
-                <div class=\"grid grid-cols-2 gap-0 text-xs border-y border-black py-4 mt-2\">
-                    <div class=\"border-r border-black pr-4 mb-4\">
-                        <table class=\"w-full\">
-                            <tr><td class=\"w-24\">II. Tiba di</td><td>: </td></tr>
+                <div class="grid grid-cols-2 gap-0 text-xs border-y border-black py-4 mt-2">
+                    <div class="border-r border-black pr-4 mb-4">
+                        <table class="w-full">
+                            <tr><td class="w-24">II. Tiba di</td><td>: </td></tr>
                             <tr><td>Pada Tanggal</td><td>: </td></tr>
                             <tr><td>Kepala</td><td>: </td></tr>
-                            <tr><td colspan=\"2\" class=\"h-12\"></td></tr>
-                            <tr><td colspan=\"2\">(........................................................)</td></tr>
-                            <tr><td colspan=\"2\">NIP. </td></tr>
+                            <tr><td colspan="2" class="h-12"></td></tr>
+                            <tr><td colspan="2">(........................................................)</td></tr>
+                            <tr><td colspan="2">NIP. </td></tr>
                         </table>
                     </div>
-                    <div class=\"pl-4 mb-4\">
-                        <table class=\"w-full\">
-                            <tr><td class=\"w-24\">Berangkat dari</td><td>: </td></tr>
+                    <div class="pl-4 mb-4">
+                        <table class="w-full">
+                            <tr><td class="w-24">Berangkat dari</td><td>: </td></tr>
                             <tr><td>Ke</td><td>: </td></tr>
                             <tr><td>Pada Tanggal</td><td>: </td></tr>
                             <tr><td>Kepala</td><td>: </td></tr>
-                            <tr><td colspan=\"2\" class=\"h-12\"></td></tr>
-                            <tr><td colspan=\"2\">(........................................................)</td></tr>
-                            <tr><td colspan=\"2\">NIP. </td></tr>
+                            <tr><td colspan="2" class="h-12"></td></tr>
+                            <tr><td colspan="2">(........................................................)</td></tr>
+                            <tr><td colspan="2">NIP. </td></tr>
                         </table>
                     </div>
                 </div>
 
-                <div class=\"text-xs border-b border-black py-4 mb-4\">
-                    <table class=\"w-full\">
+                <div class="text-xs border-b border-black py-4 mb-4">
+                    <table class="w-full">
                         <tr>
-                            <td class=\"w-1/2 align-top pr-4 border-r border-black\">
-                                <span class=\"font-bold\">VI. Tiba di:</span> ${asal}<br>
+                            <td class="w-1/2 align-top pr-4 border-r border-black">
+                                <span class="font-bold">VI. Tiba di:</span> ${asal}<br>
                                 (Tempat kedudukan)<br>
                                 Pada Tanggal: ${tglK}<br><br>
-                                <span class=\"font-bold uppercase\">PEJABAT PEMBUAT KOMITMEN</span><br>
-                                <div class=\"h-12 text-green-700 font-mono text-[9px] align-middle pt-2\">#KEJAKSAANDIGITAL</div>
-                                <span class=\"font-bold underline uppercase\">${ppkNama}</span><br>
+                                <span class="font-bold uppercase">PEJABAT PEMBUAT KOMITMEN</span><br>
+                                <div class="h-12 text-green-700 font-mono text-[9px] align-middle pt-2">#KEJAKSAANDIGITAL</div>
+                                <span class="font-bold underline uppercase">${ppkNama}</span><br>
                                 NIP. ${ppkNip}
                             </td>
-                            <td class=\"w-1/2 align-top pl-4\">
+                            <td class="w-1/2 align-top pl-4">
                                 Telah diperiksa dengan keterangan bahwa perjalanan tersebut atas perintahnya dan semata-mata untuk kepentingan jabatan dalam waktu yang sesingkat-singkatnya.<br><br>
-                                <span class=\"font-bold uppercase\">PEJABAT PEMBUAT KOMITMEN</span><br>
-                                <div class=\"h-12 text-green-700 font-mono text-[9px] align-middle pt-2\">#KEJAKSAANDIGITAL</div>
-                                <span class=\"font-bold underline uppercase\">${ppkNama}</span><br>
+                                <span class="font-bold uppercase">PEJABAT PEMBUAT KOMITMEN</span><br>
+                                <div class="h-12 text-green-700 font-mono text-[9px] align-middle pt-2">#KEJAKSAANDIGITAL</div>
+                                <span class="font-bold underline uppercase">${ppkNama}</span><br>
                                 NIP. ${ppkNip}
                             </td>
                         </tr>
                     </table>
                 </div>
-                <div class=\"text-xs mb-2\"><strong>VII. Catatan Lain-lain</strong></div>
-                <div class=\"text-xs border border-dashed border-red-500 p-2 bg-red-50 rounded\">
+                <div class="text-xs mb-2"><strong>VII. Catatan Lain-lain</strong></div>
+                <div class="text-xs border border-dashed border-red-500 p-2 bg-red-50 rounded">
                     <strong>VIII. PERHATIAN:</strong><br>
                     PPK yang menerbitkan SPPD, pegawai yang melakukan perjalanan dinas, para pejabat yang mengesahkan tanggal berangkat/tiba, serta bendahara pengeluaran bertanggung jawab berdasarkan peraturan Keuangan Negara.
                 </div>
@@ -576,31 +601,20 @@
         } catch(e) { console.error(e); }
     }
 
-
-    // ============================================================================
-    // SISTEM UNDUH DOCXTEMPLATER (100% AMAN DARI ERROR PIZZIP)
-    // ============================================================================
-
     function eksekusiDocxTemplater(arrayBufferContent, btnEl, originalBtnText) {
-        // PERBAIKAN FATAL: Memastikan PizZip selalu ditemukan meskipun diblokir
         const PizZipConstructor = window.PizZip || window.pizzip;
-        
         if (!PizZipConstructor) {
-            alert("Sistem gagal memuat PizZip. Harap pastikan Anda terhubung ke internet dan tidak ada AdBlocker yang memblokir script.");
-            btnEl.innerHTML = originalBtnText;
-            btnEl.disabled = false;
+            alert("Sistem gagal memuat PizZip. Harap pastikan Anda terhubung ke internet.");
+            btnEl.innerHTML = originalBtnText; btnEl.disabled = false;
             return;
         }
 
         try {
             const zip = new PizZipConstructor(arrayBufferContent);
             const doc = new window.docxtemplater(zip, { 
-                paragraphLoop: true, 
-                linebreaks: true,
-                nullGetter: function() { return ""; }
+                paragraphLoop: true, linebreaks: true, nullGetter: function() { return ""; }
             });
             
-            // Pemetaan Data Form ke dalam Tag Word
             const dataContext = {
                 satuan_kerja: getVal('in_satuan_kerja').toUpperCase(),
                 nomor: getVal('in_nomor'),
@@ -623,44 +637,33 @@
                 tgl_ttd: formatTanggalIndo(getVal('in_tgl_ttd')),
                 ppk_nip: getVal('in_ppk_nip'),
                 pengikut: daftarPengikut.map((p, i) => ({
-                    no: i + 1,
-                    nama: p.nama.toUpperCase(),
-                    jabatan: p.jabatan.toUpperCase(),
-                    ket: p.ket
+                    no: i + 1, nama: p.nama.toUpperCase(), jabatan: p.jabatan.toUpperCase(), ket: p.ket
                 }))
             };
 
             doc.render(dataContext);
 
             const blob = doc.getZip().generate({ 
-                type: "blob", 
-                mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" 
+                type: "blob", mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" 
             });
             
             const url = window.URL.createObjectURL(blob);
             let fileTitle = getVal('in_nama_pegawai').replace(/[^a-zA-Z0-9]/g, '_') || "Pegawai";
             
             const a = document.createElement('a');
-            a.href = url;
-            a.download = `SPPD_${fileTitle}.docx`;
-            document.body.appendChild(a);
-            a.click();
+            a.href = url; a.download = `SPPD_${fileTitle}.docx`;
+            document.body.appendChild(a); a.click();
             
-            setTimeout(() => {
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-            }, 100);
+            setTimeout(() => { document.body.removeChild(a); window.URL.revokeObjectURL(url); }, 100);
 
         } catch (error) {
             console.error("DocxTemplater Error:", error);
-            alert(`Gagal menyusun File Word!\n\nPastikan format tag di dalam tabel Word Anda sudah bersih.\n\nPesan Error: ${error.message}`);
+            alert(`Gagal menyusun File Word!\n\nPesan Error: ${error.message}`);
         } finally {
-            btnEl.innerHTML = originalBtnText;
-            btnEl.disabled = false;
+            btnEl.innerHTML = originalBtnText; btnEl.disabled = false;
         }
     }
 
-    // FUNGSI 1: UNDUH OTOMATIS (Via Fetch)
     async function downloadWord() {
         const start = getVal('in_tgl_berangkat');
         const end = getVal('in_tgl_kembali');
@@ -671,45 +674,34 @@
 
         const btn = document.getElementById('btnDownload');
         const originalText = btn.innerHTML;
-        btn.innerHTML = `<i class=\"ph-bold ph-spinner animate-spin text-lg\"></i> Memproses...`;
+        btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin text-lg"></i> Memproses...`;
         btn.disabled = true;
 
         try {
             const response = await fetch("template.docx");
-            if (!response.ok) {
-                throw new Error("HTTP Error " + response.status + " - Template tidak ditemukan di folder lokal Anda.");
-            }
-            
+            if (!response.ok) throw new Error("HTTP Error " + response.status);
             const arrayBuffer = await response.arrayBuffer();
             eksekusiDocxTemplater(arrayBuffer, btn, originalText);
-
         } catch (error) {
             console.error(error);
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-            alert("Sistem gagal membaca template.docx otomatis (Biasanya diblokir keamanan Browser).\\n\\nSOLUSI: Silakan gunakan tombol abu-abu 'Manual Upload Template' dan pilih file template.docx Anda.");
+            btn.innerHTML = originalText; btn.disabled = false;
+            alert("Sistem gagal membaca template.docx otomatis.\nSOLUSI: Gunakan tombol 'Manual Upload'.");
         }
     }
 
-    // FUNGSI 2: MANUAL UPLOAD TEMPLATE (Paling Aman, Anti-Block Browser)
     function generateFromLocalTemplate(inputElement) {
         if (inputElement.files.length === 0) return;
-        
         const file = inputElement.files[0];
         const reader = new FileReader();
-        
         const btn = document.getElementById('btnDownload');
         const originalText = btn.innerHTML;
-        btn.innerHTML = `<i class=\"ph-bold ph-spinner animate-spin text-lg\"></i> Menyusun Lokal...`;
+        btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin text-lg"></i> Menyusun Lokal...`;
         btn.disabled = true;
         
         reader.onload = function(e) {
-            const arrayBuffer = e.target.result;
-            eksekusiDocxTemplater(arrayBuffer, btn, originalText);
+            eksekusiDocxTemplater(e.target.result, btn, originalText);
             inputElement.value = ""; 
         };
-        
-        // PENGGUNAAN readAsArrayBuffer AGAR COCOK DENGAN PIZZIP
         reader.readAsArrayBuffer(file);
     }
 </script>
