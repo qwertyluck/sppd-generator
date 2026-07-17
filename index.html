@@ -26,11 +26,11 @@
         }
     </script>
 
-    <style>
+    <style type="text/tailwindcss">
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
-        /* UI DARK MODE PERMANEN */
-        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #e2e8f0; padding-bottom: 70px; }
+        /* UI DARK MODE PERMANEN + Color Scheme Dark untuk kalender browser */
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #e2e8f0; padding-bottom: 70px; color-scheme: dark; }
         
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #1e293b; }
@@ -39,22 +39,22 @@
 
         @media print { 
             .no-print { display: none !important; } 
-            body { background: #ffffff; color: #000; padding-bottom: 0; }
+            body { background: #ffffff; color: #000; padding-bottom: 0; color-scheme: light; }
             .print-area { box-shadow: none !important; border: none !important; margin-bottom: 0 !important; }
             .page-break { page-break-before: always; }
         }
 
         /* Dokumen Preview HARUS tetap putih dengan teks hitam */
-        .spd-document { font-family: 'Arial', sans-serif; color: #000; background-color: #ffffff; line-height: 1.4; font-size: 9.5pt; }
+        .spd-document { font-family: 'Arial', sans-serif; color: #000; background-color: #ffffff; line-height: 1.4; font-size: 9.5pt; color-scheme: light; }
         
-        /* Form Outline - Diperbesar, Elegan, dan Nyaman */
+        /* Form Outline - Ditambahkan text-white agar teks sangat terang dan kontras */
         .input-modern { 
-            @apply w-full bg-[#1e293b] border border-slate-600 rounded-lg px-4 py-3 text-sm focus:bg-[#0f172a] focus:border-kejaksaan-500 focus:ring-2 focus:ring-kejaksaan-500/50 transition-all outline-none text-slate-100 placeholder-slate-500 shadow-inner; 
+            @apply w-full bg-[#1e293b] border border-slate-600 rounded-lg px-4 py-3 text-sm focus:bg-[#0f172a] focus:border-kejaksaan-500 focus:ring-2 focus:ring-kejaksaan-500/50 transition-all outline-none text-white placeholder-slate-400 shadow-inner; 
         }
         
         /* Label Form - Jelas di Atas Input */
         .label-modern { 
-            @apply block text-[12px] font-bold text-slate-400 mb-2 uppercase tracking-wider; 
+            @apply block text-[12px] font-bold text-slate-300 mb-2 uppercase tracking-wider; 
         }
         
         /* Card Container - Mode Gelap */
@@ -111,7 +111,7 @@
                     <div class="space-y-5">
                         <div>
                             <label for="in_satuan_kerja" class="label-modern">Satuan Kerja</label>
-                            <input type="text" id="in_satuan_kerja" value="Kejaksaan Tinggi Maluku" class="input-modern uppercase font-bold text-white">
+                            <input type="text" id="in_satuan_kerja" value="Kejaksaan Tinggi Maluku" class="input-modern uppercase font-bold">
                         </div>
                         <div>
                             <label for="in_nomor" class="label-modern">Nomor SPPD</label>
@@ -128,7 +128,7 @@
                     <div class="space-y-5">
                         <div>
                             <label for="in_nama_pegawai" class="label-modern">Nama Pegawai</label>
-                            <input type="text" id="in_nama_pegawai" class="input-modern uppercase font-bold text-white">
+                            <input type="text" id="in_nama_pegawai" class="input-modern uppercase font-bold">
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             <div>
@@ -182,7 +182,7 @@
                             </div>
                             <div>
                                 <label for="in_tujuan" class="label-modern">Tempat Tujuan</label>
-                                <input type="text" id="in_tujuan" class="input-modern font-bold text-white">
+                                <input type="text" id="in_tujuan" class="input-modern font-bold">
                             </div>
                         </div>
                         
@@ -244,7 +244,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
                                 <label for="in_ppk_nama" class="label-modern">Nama PPK</label>
-                                <input type="text" id="in_ppk_nama" class="input-modern uppercase font-bold text-white">
+                                <input type="text" id="in_ppk_nama" class="input-modern uppercase font-bold">
                             </div>
                             <div>
                                 <label for="in_ppk_nip" class="label-modern">NIP PPK</label>
@@ -386,7 +386,6 @@
         saveData(); updatePreview();
     }
 
-    // UPDATE UI PENGIKUT MENGGUNAKAN DARK MODE & SPACING YANG SESUAI
     function renderPengikut() {
         const container = document.getElementById('pengikutContainer');
         container.innerHTML = '';
