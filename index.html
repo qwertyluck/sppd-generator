@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generator SPPD - Kejaksaan Digital</title>
+    <title>Generator SPPD - Kejaksaan</title>
     
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.tailwindcss.com https://unpkg.com;">
 
@@ -57,8 +57,8 @@
                     <i class="ph-bold ph-scales text-2xl"></i>
                 </div>
                 <div>
-                    <h1 class="font-bold text-slate-800 text-lg leading-tight tracking-tight">Kejaksaan Digital</h1>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sistem Penerbitan SPPD</p>
+                    <h1 class="font-bold text-slate-800 text-lg leading-tight tracking-tight">SPPD GENERATOR KEJAKSAAN</h1>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sistem Penerbitan Surat Perintah Perjalanan Dinas Otomatis</p>
                 </div>
             </div>
             <div class="flex items-center gap-2">
@@ -128,13 +128,20 @@
                         </div>
                         <div class="grid grid-cols-3 gap-5">
                             <div class="col-span-2">
-                                <label for="in_jabatan_utama" class="label-modern">Jabatan / Instansi</label>
+                                <label for="in_jabatan_utama" class="label-modern">Jabatan Pegawai</label>
                                 <input type="text" id="in_jabatan_utama" class="input-modern uppercase">
                             </div>
                             <div>
-                                <label for="in_biaya_utama" class="label-modern">Tgkt. Biaya</label>
-                                <input type="text" id="in_biaya_utama" value="C" class="input-modern text-center font-bold">
-                            </div>
+    <label for="in_biaya_utama" class="label-modern">Tgkt. Biaya</label>
+    <select id="in_biaya_utama" class="form-outline cursor-pointer font-bold text-slate-800">
+        <option value="A">Tingkat A - Pejabat Negara (Ketua/Wakil/Anggota Lembaga Tinggi Negara, Menteri/setingkat)</option>
+        <option value="B">Tingkat B - Pejabat Negara Lainnya dan Pejabat Eselon I</option>
+        <option value="C" selected>Tingkat C - Pejabat Eselon II</option>
+        <option value="D">Tingkat D - Pejabat Eselon III dan PNS Golongan IV</option>
+        <option value="E">Tingkat E - Pejabat Eselon IV dan PNS Golongan III</option>
+        <option value="F">Tingkat F - PNS Golongan II dan Golongan I</option>
+    </select>
+</div>
                         </div>
                     </div>
                 </div>
